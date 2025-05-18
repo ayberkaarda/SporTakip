@@ -1,0 +1,146 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|c:\\users\\umuty\\onedrive\\belgeler\\github\\sportakip\\sportakip\\sporcudetayform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\sporcudetayform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\takipekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\takipekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\sporcudetayform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\sporcudetayform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\takipekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\takipekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\antrenmanekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\antrenmanekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\antrenmanekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\antrenmanekleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\sportakip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08E5CDDB-7C6D-4E02-9F9B-87ED458577C8}|SporTakip\\SporTakip.csproj|solutionrelative:sportakip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AntrenmanEkleForm.cs [Tasar\u0131m]",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\AntrenmanEkleForm.cs",
+              "RelativeDocumentMoniker": "SporTakip\\AntrenmanEkleForm.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Masa\u00FCst\u00FC\\yeni projeler ayberk\\SporTakip\\SporTakip\\AntrenmanEkleForm.cs [Tasar\u0131m]",
+              "RelativeToolTip": "..\\..\\..\\Masa\u00FCst\u00FC\\yeni projeler ayberk\\SporTakip\\SporTakip\\AntrenmanEkleForm.cs [Tasar\u0131m]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T23:03:40.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TakipEkleForm.cs [Tasar\u0131m]",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\TakipEkleForm.cs",
+              "RelativeDocumentMoniker": "SporTakip\\TakipEkleForm.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Masa\u00FCst\u00FC\\yeni projeler ayberk\\SporTakip\\SporTakip\\TakipEkleForm.cs [Tasar\u0131m]",
+              "RelativeToolTip": "..\\..\\..\\Masa\u00FCst\u00FC\\yeni projeler ayberk\\SporTakip\\SporTakip\\TakipEkleForm.cs [Tasar\u0131m]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T21:50:42.356Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AntrenmanEkleForm.cs",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\AntrenmanEkleForm.cs",
+              "RelativeDocumentMoniker": "SporTakip\\AntrenmanEkleForm.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\AntrenmanEkleForm.cs",
+              "RelativeToolTip": "SporTakip\\AntrenmanEkleForm.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAnwBUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T23:00:07.456Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TakipEkleForm.cs",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\TakipEkleForm.cs",
+              "RelativeDocumentMoniker": "SporTakip\\TakipEkleForm.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\TakipEkleForm.cs",
+              "RelativeToolTip": "SporTakip\\TakipEkleForm.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAnwBUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T22:52:53.291Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SporcuDetayForm.cs",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\SporcuDetayForm.cs",
+              "RelativeDocumentMoniker": "SporTakip\\SporcuDetayForm.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\SporcuDetayForm.cs",
+              "RelativeToolTip": "SporTakip\\SporcuDetayForm.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAnwBUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-10T14:35:12.392Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SporcuDetayForm.cs [Tasar\u0131m]",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\SporcuDetayForm.cs",
+              "RelativeDocumentMoniker": "SporTakip\\SporcuDetayForm.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\SporcuDetayForm.cs [Tasar\u0131m]",
+              "RelativeToolTip": "SporTakip\\SporcuDetayForm.cs [Tasar\u0131m]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T22:44:14.875Z",
+              "EditorCaption": " [Tasar\u0131m]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\Form1.cs",
+              "RelativeDocumentMoniker": "SporTakip\\Form1.cs",
+              "ToolTip": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\Form1.cs",
+              "RelativeToolTip": "SporTakip\\Form1.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABYAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-15T22:54:07.217Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Form1.cs [Tasar\u0131m]",
+              "DocumentMoniker": "C:\\Users\\umuty\\OneDrive\\Belgeler\\GitHub\\SporTakip\\SporTakip\\Form1.cs",
+              "RelativeDocumentMoniker": "SporTakip\\Form1.cs",
+              "ToolTip": "C:\\Users\\Ayber\\Downloads\\proje c#\\SporTakip\\SporTakip\\Form1.cs [Tasar\u0131m]",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Ayber\\Downloads\\proje c#\\SporTakip\\SporTakip\\Form1.cs [Tasar\u0131m]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-10T14:15:30.719Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

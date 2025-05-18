@@ -1,0 +1,26 @@
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.csproj.AssemblyReference.cache
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.AntrenmanEkleForm.resources
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.Form1.resources
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.Properties.Resources.resources
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.SporcuDetayForm.resources
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.TakipEkleForm.resources
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.csproj.GenerateResource.cache
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.csproj.CoreCompileInputs.cache
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\bin\Debug\SporTakip.exe.config
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\bin\Debug\SporTakip.exe
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\bin\Debug\SporTakip.pdb
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.exe
+C:\Users\umuty\OneDrive\Masaüstü\proje c#\SporTakip\SporTakip\obj\Debug\SporTakip.pdb
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\bin\Debug\SporTakip.exe.config
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\bin\Debug\SporTakip.exe
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\bin\Debug\SporTakip.pdb
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.csproj.AssemblyReference.cache
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.AntrenmanEkleForm.resources
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.Form1.resources
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.Properties.Resources.resources
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.SporcuDetayForm.resources
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.TakipEkleForm.resources
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.csproj.GenerateResource.cache
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.csproj.CoreCompileInputs.cache
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.exe
+C:\Users\umuty\OneDrive\Masaüstü\yeni projeler ayberk\SporTakip\SporTakip\obj\Debug\SporTakip.pdb
