@@ -14,6 +14,7 @@ public static class DataServiceCollectionExtensions
         services.AddScoped<ISporcuRepository, SporcuRepository>();
         services.AddScoped<IAntrenmanRepository, AntrenmanRepository>();
         services.AddScoped<ITakipRepository, TakipRepository>();
+        services.AddScoped<IOlcumRepository, OlcumRepository>();
         return services;
     }
 }
