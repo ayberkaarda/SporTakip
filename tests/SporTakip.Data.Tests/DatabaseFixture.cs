@@ -56,7 +56,7 @@ public sealed class DatabaseFixture : IAsyncLifetime
         {
             await using var database = new SqlConnection(ConnectionString);
             await database.OpenAsync();
-            foreach (var filename in new[] { "001_initial.sql", "002_cascade_fk.sql", "003_olcumler.sql" })
+            foreach (var filename in new[] { "001_initial.sql", "002_cascade_fk.sql", "003_olcumler.sql", "004_butunluk.sql" })
             {
                 var sql = await File.ReadAllTextAsync(Path.Combine(AppContext.BaseDirectory, "database", filename));
                 foreach (var batch in Regex.Split(sql, @"^\s*GO\s*(?:--[^\r\n]*)?\r?$", RegexOptions.Multiline | RegexOptions.IgnoreCase))

@@ -24,4 +24,5 @@
     <Content Include="..\..\database\003_olcumler.sql" Link="database\003_olcumler.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup><Content Include="..\..\database\004_butunluk.sql" Link="database\004_butunluk.sql" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
 </Project>

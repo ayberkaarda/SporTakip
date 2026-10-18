@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using SporTakip.Application.Abstractions.Repositories;
 
 namespace SporTakip.Data;
@@ -10,6 +10,7 @@ public static class DataServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
+        services.AddSingleton(new SchemaMigrator(connectionString));
         services.AddSingleton<IDbConnectionFactory>(new SqlConnectionFactory(connectionString));
         services.AddScoped<ISporcuRepository, SporcuRepository>();
         services.AddScoped<IAntrenmanRepository, AntrenmanRepository>();
