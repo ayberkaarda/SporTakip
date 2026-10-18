@@ -158,4 +158,94 @@ public class SporcuServiceTests
         (await _sut.GetirAsync(1))!.Ad.Should().Be("A");
         (await _sut.GetirAsync(2)).Should().BeNull();
     }
+
+    private void Tohumla()
+    {
+        _repo.Items.AddRange(
+        [
+            new Sporcu { Id = 1, Ad = "Zeynep Kaya", SporDali = "Yüzme" },
+            new Sporcu { Id = 2, Ad = "Ali Işık", SporDali = "Basketbol" },
+            new Sporcu { Id = 3, Ad = "İlker Demir", SporDali = null },
+            new Sporcu { Id = 4, Ad = "Can Yıldız", SporDali = "Atletizm" },
+        ]);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task AraAsync_bos_arama_tumunu_ad_sirali_doner(string? arama)
+    {
+        Tohumla();
+        var sonuc = await _sut.AraAsync(arama);
+        sonuc.Select(s => s.Id).Should().Equal(2, 4, 3, 1);
+    }
+
+    [Fact]
+    public async Task AraAsync_kismi_eslesme_adda_bulur()
+    {
+        Tohumla();
+        (await _sut.AraAsync("  eyn")).Select(s => s.Id).Should().Equal(1);
+        (await _sut.AraAsync("KAY")).Select(s => s.Id).Should().Equal(1);
+    }
+
+    [Theory]
+    [InlineData("IŞIK", 2)]
+    [InlineData("ışık", 2)]
+    [InlineData("ilker", 3)]
+    [InlineData("İLKER", 3)]
+    [InlineData("yıldız", 4)]
+    [InlineData("YILDIZ", 4)]
+    public async Task AraAsync_turkce_i_ve_dotsuz_i_dogru_eslesir(string arama, int beklenenId)
+    {
+        Tohumla();
+        var sonuc = await _sut.AraAsync(arama);
+        sonuc.Select(s => s.Id).Should().Equal(beklenenId);
+    }
+
+    [Fact]
+    public async Task AraAsync_noktali_i_ile_noktasiz_i_karismaz()
+    {
+        Tohumla();
+        (await _sut.AraAsync("is")).Should().BeEmpty();
+        (await _sut.AraAsync("işık")).Should().BeEmpty();
+        (await _sut.AraAsync("ilker")).Select(s => s.Id).Should().Equal(3);
+        (await _sut.AraAsync("ış")).Select(s => s.Id).Should().Equal(2);
+    }
+
+    [Fact]
+    public async Task AraAsync_spor_dali_ile_arar_ve_null_dalli_sporcuda_hata_vermez()
+    {
+        Tohumla();
+        (await _sut.AraAsync("basket")).Select(s => s.Id).Should().Equal(2);
+        (await _sut.AraAsync("YÜZ")).Select(s => s.Id).Should().Equal(1);
+    }
+
+    [Fact]
+    public async Task AraAsync_ad_veya_dalda_eslesenler_ad_sirali_doner()
+    {
+        Tohumla();
+        var sonuc = await _sut.AraAsync("a");
+        sonuc.Select(s => s.Id).Should().Equal(2, 4, 1);
+    }
+
+    [Fact]
+    public async Task AraAsync_eslesme_yoksa_bos_doner()
+    {
+        Tohumla();
+        (await _sut.AraAsync("xyz")).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task AraAsync_turkce_alfabeye_gore_siralar()
+    {
+        _repo.Items.AddRange(
+        [
+            new Sporcu { Id = 1, Ad = "Zeki", SporDali = "x" },
+            new Sporcu { Id = 2, Ad = "çağla", SporDali = "x" },
+            new Sporcu { Id = 3, Ad = "Can", SporDali = "x" },
+            new Sporcu { Id = 4, Ad = "Ahmet", SporDali = "x" },
+        ]);
+        (await _sut.AraAsync("x")).Select(s => s.Id).Should().Equal(4, 3, 2, 1);
+    }
 }

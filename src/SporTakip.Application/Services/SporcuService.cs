@@ -1,6 +1,7 @@
 using SporTakip.Application.Abstractions.Repositories;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Application.Validation;
+using System.Globalization;
 using SporTakip.Domain;
 
 namespace SporTakip.Application.Services;
@@ -13,6 +14,24 @@ public sealed class SporcuService : ISporcuService
 
     public Task<IReadOnlyList<Sporcu>> ListeleAsync(CancellationToken cancellationToken = default)
         => _repository.GetAllAsync(cancellationToken);
+
+    private static readonly CultureInfo Tr = CultureInfo.GetCultureInfo("tr-TR");
+
+    public async Task<IReadOnlyList<Sporcu>> AraAsync(string? arama, CancellationToken cancellationToken = default)
+    {
+        var tumu = await _repository.GetAllAsync(cancellationToken);
+        var terim = arama?.Trim();
+        IEnumerable<Sporcu> sonuc = tumu;
+        if (!string.IsNullOrEmpty(terim))
+            sonuc = sonuc.Where(s => Icerir(s.Ad, terim) || Icerir(s.SporDali, terim));
+
+        return sonuc
+            .OrderBy(s => s.Ad ?? string.Empty, StringComparer.Create(Tr, ignoreCase: true))
+            .ToList();
+    }
+
+    private static bool Icerir(string? metin, string terim)
+        => !string.IsNullOrEmpty(metin) && Tr.CompareInfo.IndexOf(metin, terim, CompareOptions.IgnoreCase) >= 0;
 
     public Task<Sporcu?> GetirAsync(int id, CancellationToken cancellationToken = default)
         => _repository.GetByIdAsync(id, cancellationToken);
