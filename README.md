@@ -198,7 +198,7 @@ Renkler, yazı tipleri ve aralıklar tek yerde, `src\SporTakip.WinForms\Theme\` 
 
 ## 🖼️ Ekran Görüntüleri
 
-Aşağıdaki görüntüler önceki tasarıma aittir; güncel arayüz yukarıdaki temalarla açılır.
+Görüntüler Açık temayla ve örnek verilerle alınmıştır.
 
 ### Ana Sayfa
 ![Ana Sayfa](screenshots/anasayfa.png)
@@ -211,3 +211,9 @@ Aşağıdaki görüntüler önceki tasarıma aittir; güncel arayüz yukarıdaki
 
 ### Sporcu Detayı
 ![Sporcu Detayi](screenshots/sporcu_detayi.png)
+
+### Haftalık Program
+![Haftalık Program](screenshots/haftalik_program.png)
+
+### Ölçüm Grafiği
+![Ölçüm Grafiği](screenshots/olcum_grafik.png)
