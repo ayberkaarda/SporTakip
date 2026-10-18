@@ -7,6 +7,9 @@ public interface ISporcuService
 {
     Task<IReadOnlyList<Sporcu>> ListeleAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>Ad veya spor dalında (tr-TR, büyük/küçük harf duyarsız) arar; boşsa tümü. Ad'a göre sıralı.</summary>
+    Task<IReadOnlyList<Sporcu>> AraAsync(string? arama, CancellationToken cancellationToken = default);
+
     Task<Sporcu?> GetirAsync(int id, CancellationToken cancellationToken = default);
 
     ValidationResult Dogrula(Sporcu sporcu);
