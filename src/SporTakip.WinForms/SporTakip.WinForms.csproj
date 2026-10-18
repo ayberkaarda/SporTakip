@@ -56,7 +56,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Bağlantı ve günlük ayarları exe yanından okunur; appsettings.Local.json opsiyonel ve git dışıdır. -->
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="appsettings.Local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.Local.json')" />
   </ItemGroup>
 
   <!-- Bağımlılık yönü: WinForms -> Application -> Domain. Data yalnızca composition root (Program.cs) için. -->

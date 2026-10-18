@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SporTakip
@@ -36,6 +38,110 @@ namespace SporTakip
             ControlBox = false;
             DoubleBuffered = true;
             Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            _lifetimeToken = _lifetime.Token;
+        }
+
+        private readonly CancellationTokenSource _lifetime = new CancellationTokenSource();
+        // Token kaynak dispose edildikten sonra da güvenle okunabilsin diye baştan saklanır.
+        private readonly CancellationToken _lifetimeToken;
+        private readonly object _lifetimeLock = new object();
+        private bool _lifetimeEnded;
+        private readonly Dictionary<Button, bool> _busyStates = new Dictionary<Button, bool>();
+        private int _busyCount;
+
+        /// <summary>Form kapanınca iptal edilir; servis çağrılarına verilir. Dispose sonrası da okunabilir.</summary>
+        protected CancellationToken LifetimeToken => _lifetimeToken;
+
+        /// <summary>
+        /// Form kapatıldı/dispose edildi mi? Await sonrası kontrollere erişmeden ve
+        /// MessageBox göstermeden önce bakılır.
+        /// </summary>
+        protected bool IsClosedOrClosing => IsDisposed || Disposing || _lifetimeToken.IsCancellationRequested;
+
+        /// <summary>
+        /// Süren bir işlem boyunca başlık düğmeleri dışındaki tüm butonları devre dışı bırakır;
+        /// dönen nesne dispose edilince eski durumlarına döner. İç içe çağrılar sayılır.
+        /// </summary>
+        protected IDisposable BeginBusy()
+        {
+            if (_busyCount++ == 0)
+            {
+                _busyStates.Clear();
+                foreach (Button button in ActionButtons(this))
+                {
+                    _busyStates[button] = button.Enabled;
+                    button.Enabled = false;
+                }
+                UseWaitCursor = true;
+            }
+            return new BusyScope(this);
+        }
+
+        private void EndBusy()
+        {
+            if (--_busyCount > 0 || IsDisposed) return;
+            foreach (KeyValuePair<Button, bool> state in _busyStates)
+                if (!state.Key.IsDisposed) state.Key.Enabled = state.Value;
+            _busyStates.Clear();
+            UseWaitCursor = false;
+        }
+
+        private static IEnumerable<Button> ActionButtons(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is Button button && !IsTitleButton(button)) yield return button;
+                foreach (Button child in ActionButtons(control)) yield return child;
+            }
+        }
+
+        private static bool IsTitleButton(Button button) =>
+            string.Equals(button.Name, "btnkapat", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(button.Name, "btnAsagial", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>İşlem form kapandığı için iptal edildiyse true; bu durumda hata gösterilmez.</summary>
+        protected bool IsClosingCancellation(Exception exception) =>
+            exception is OperationCanceledException && (_lifetimeToken.IsCancellationRequested || IsDisposed);
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            CancelLifetime(dispose: false);
+            base.OnFormClosed(e);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            // Ana form hem kapanışta WinForms tarafından hem de DI kapsamı tarafından
+            // dispose edilebilir; iptal/dispose idempotent olmalı.
+            if (disposing) CancelLifetime(dispose: true);
+            base.Dispose(disposing);
+        }
+
+        private void CancelLifetime(bool dispose)
+        {
+            lock (_lifetimeLock)
+            {
+                if (_lifetimeEnded) return;
+                if (!_lifetime.IsCancellationRequested) _lifetime.Cancel();
+                if (dispose)
+                {
+                    _lifetime.Dispose();
+                    _lifetimeEnded = true;
+                }
+            }
+        }
+
+        private sealed class BusyScope : IDisposable
+        {
+            private BorderlessForm _owner;
+
+            public BusyScope(BorderlessForm owner) => _owner = owner;
+
+            public void Dispose()
+            {
+                _owner?.EndBusy();
+                _owner = null;
+            }
         }
 
         protected override CreateParams CreateParams
@@ -127,9 +233,8 @@ namespace SporTakip
                 var button = control as Button;
                 if (button == null) continue;
 
+                if (!IsTitleButton(button)) continue;
                 bool isClose = string.Equals(button.Name, "btnkapat", StringComparison.OrdinalIgnoreCase);
-                bool isMinimize = string.Equals(button.Name, "btnAsagial", StringComparison.OrdinalIgnoreCase);
-                if (!isClose && !isMinimize) continue;
 
                 button.TabStop = false;
                 button.Cursor = Cursors.Hand;
