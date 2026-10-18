@@ -1,56 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
 namespace SporTakip
 {
-    public partial class AntrenmanEkleForm : Form
+    public partial class AntrenmanEkleForm : BorderlessForm
     {
+        private bool _isLoading;
+        private readonly ErrorProvider _errors;
+
         public AntrenmanEkleForm()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MaximumSize = this.Size;
-            this.MinimumSize = this.Size;
+            if (components == null) components = new System.ComponentModel.Container();
+            _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
         }
 
         private void AntrenmanEkleForm_Load(object sender, EventArgs e)
         {
-            var dt = DatabaseHelper.ExecuteQuery("SELECT * FROM Sporcular");
-            comboSporcular.DataSource = dt;
-            comboSporcular.DisplayMember = "Ad";
-            comboSporcular.ValueMember = "Id";
-            this.FormBorderStyle = FormBorderStyle.None;
+            _isLoading = true;
+            try
+            {
+                comboSporcular.DisplayMember = "Ad";
+                comboSporcular.ValueMember = "Id";
+                comboSporcular.DataSource = DatabaseHelper.ExecuteQuery("SELECT Id, Ad FROM Sporcular");
+            }
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
+            finally { _isLoading = false; }
 
-            // Çıkış ve diğer düğmeleri gizle
-            this.ControlBox = false;
-            this.MaximizeBox = false; // Maksimize butonunu gizle
-            this.MinimizeBox = false; // Minimize butonunu gizle
         }
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
-            if (comboSporcular.SelectedValue == null) return;
-
-            int sporcuId = Convert.ToInt32(comboSporcular.SelectedValue);
-            string adi = txtAntrenmanName.Text;
-            string detay = txtDetaylar.Text;
-
-            string query = "INSERT INTO Antrenmanlar (SporcuId, AntrenmanAdi, Detaylar) VALUES (@sid, @adi, @detay)";
-            DatabaseHelper.ExecuteNonQuery(query,
-                new SqlParameter("@sid", sporcuId),
-                new SqlParameter("@adi", adi),
-                new SqlParameter("@detay", detay));
-
-            MessageBox.Show("Antrenman kaydettin Tebriklerr!");
+            if (_isLoading) return;
+            _errors.Clear();
+            bool valid = true;
+            if (!(comboSporcular.SelectedValue is int))
+            {
+                _errors.SetError(comboSporcular, "Lütfen bir sporcu seçin.");
+                valid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtAntrenmanName.Text))
+            {
+                _errors.SetError(txtAntrenmanName, "Lütfen antrenman adını girin.");
+                valid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtDetaylar.Text))
+            {
+                _errors.SetError(txtDetaylar, "Lütfen antrenman detaylarını girin.");
+                valid = false;
+            }
+            if (!valid) return;
+            try
+            {
+                DatabaseHelper.ExecuteNonQuery(
+                    "INSERT INTO Antrenmanlar (SporcuId, AntrenmanAdi, Detaylar) VALUES (@sid, @adi, @detay)",
+                    new SqlParameter("@sid", (int)comboSporcular.SelectedValue),
+                    new SqlParameter("@adi", txtAntrenmanName.Text.Trim()),
+                    new SqlParameter("@detay", txtDetaylar.Text.Trim()));
+                MessageBox.Show("Antrenman kaydedildi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtAntrenmanName.Clear();
+                txtDetaylar.Clear();
+                txtAntrenmanName.Focus();
+            }
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
         private void btnkapat_Click(object sender, EventArgs e)
@@ -64,3 +77,4 @@ namespace SporTakip
         }
     }
 }
+
