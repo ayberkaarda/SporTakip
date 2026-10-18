@@ -1,5 +1,6 @@
 using Dapper;
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using SporTakip.Domain;
 using Xunit;
 
@@ -8,14 +9,12 @@ namespace SporTakip.Data.Tests;
 [Collection("LocalDB")]
 public sealed class OlcumRepositoryTests
 {
-    private readonly DatabaseFixture _database;
     private readonly SporcuRepository _sporcular;
     private readonly TakipRepository _takipler;
     private readonly OlcumRepository _olcumler;
 
     public OlcumRepositoryTests(DatabaseFixture database)
     {
-        _database = database;
         _sporcular = new(database.ConnectionFactory);
         _takipler = new(database.ConnectionFactory);
         _olcumler = new(database.ConnectionFactory);
@@ -76,7 +75,7 @@ public sealed class OlcumRepositoryTests
     }
 
     [LocalDbFact]
-    public async Task Olcum_ListBySporcuId_FiltersNullDatesAndOrdersByDateThenIdAscending()
+    public async Task Olcum_ListBySporcuId_FiltersByOwnerAndOrdersByDateThenIdAscending()
     {
         var owner = await AddSporcuAsync();
         var otherOwner = await AddSporcuAsync();
@@ -86,12 +85,6 @@ public sealed class OlcumRepositoryTests
         var newestTakip = await AddTakipAsync(owner, date.AddDays(1));
         var oldestTakip = await AddTakipAsync(owner, date.AddDays(-1));
         var otherTakip = await AddTakipAsync(otherOwner, date);
-        // Takip.Tarih null kabul etmediği için eski şemadaki NULL kaydı SQL ile oluştur.
-        await using var connection = await _database.ConnectionFactory.OpenConnectionAsync();
-        var nullDateTakip = await connection.ExecuteScalarAsync<int>(
-            "INSERT INTO dbo.Takipler (SporcuId, Tarih) VALUES (@SporcuId, NULL); SELECT CAST(SCOPE_IDENTITY() AS int);",
-            new { SporcuId = owner });
-        var nullDateOlcum = await AddOlcumAsync(nullDateTakip);
         var newest = await AddOlcumAsync(newestTakip);
         var middleFirst = await AddOlcumAsync(sameDateTakip);
         var oldest = await AddOlcumAsync(oldestTakip);
@@ -106,8 +99,66 @@ public sealed class OlcumRepositoryTests
             new OlcumKaydi(middleSecond, middleTakip, date, "Kilo", 72.50m, "kg"),
             new OlcumKaydi(middleThird, sameDateTakip, date, "Kilo", 72.50m, "kg"),
             new OlcumKaydi(newest, newestTakip, date.AddDays(1), "Kilo", 72.50m, "kg"));
-        (await _olcumler.GetByIdAsync(nullDateOlcum)).Should().NotBeNull();
         (await _olcumler.ListBySporcuIdAsync(-1)).Should().BeEmpty();
+    }
+
+    [LocalDbFact]
+    public async Task Olcum_ListBySporcuId_SkipsNullDatesOnLegacyNullableSchema()
+    {
+        // 004 Tarih'i NOT NULL yapar; NULL tarih yalnizca 004'un donusturemedigi eski semada mumkundur.
+        var builder = new SqlConnectionStringBuilder(
+            Environment.GetEnvironmentVariable(DatabaseFixture.ConnectionVariable)!)
+        {
+            InitialCatalog = "master", AttachDBFilename = string.Empty, Pooling = false
+        };
+        var name = $"SporTakipNullTarihTest_{Guid.NewGuid():N}";
+        try
+        {
+            await using (var master = new SqlConnection(builder.ConnectionString))
+            {
+                await master.OpenAsync();
+                await master.ExecuteAsync($"CREATE DATABASE [{name}];");
+            }
+            builder.InitialCatalog = name;
+            var olcumler = new OlcumRepository(new SqlConnectionFactory(builder.ConnectionString));
+            await using var connection = new SqlConnection(builder.ConnectionString);
+            await connection.OpenAsync();
+            await connection.ExecuteAsync("""
+                CREATE TABLE dbo.Sporcular (
+                    Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                    Ad NVARCHAR(100) NOT NULL,
+                    SporDali NVARCHAR(100) NULL);
+                CREATE TABLE dbo.Takipler (
+                    Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                    SporcuId INT NULL FOREIGN KEY REFERENCES dbo.Sporcular(Id),
+                    Tarih DATETIME NULL,
+                    Aciklama NVARCHAR(MAX) NULL);
+                CREATE TABLE dbo.Olcumler (
+                    Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                    TakipId INT NOT NULL FOREIGN KEY REFERENCES dbo.Takipler(Id),
+                    Tur NVARCHAR(50) NOT NULL,
+                    Deger DECIMAL(9,2) NOT NULL,
+                    Birim NVARCHAR(20) NULL);
+                INSERT INTO dbo.Sporcular (Ad, SporDali) VALUES (N'Eski sporcu', N'Atletizm');
+                INSERT INTO dbo.Takipler (SporcuId, Tarih) VALUES (1, NULL), (1, '20260510');
+                INSERT INTO dbo.Olcumler (TakipId, Tur, Deger, Birim)
+                    VALUES (1, N'Kilo', 70.00, N'kg'), (2, N'Kilo', 72.50, N'kg');
+                """);
+
+            (await olcumler.ListBySporcuIdAsync(1)).Should().Equal(
+                new OlcumKaydi(2, 2, new DateTime(2026, 5, 10), "Kilo", 72.50m, "kg"));
+            (await olcumler.GetByIdAsync(1)).Should().NotBeNull();
+        }
+        finally
+        {
+            builder.InitialCatalog = "master";
+            await using var master = new SqlConnection(builder.ConnectionString);
+            await master.OpenAsync();
+            // Identifier consists only of the constant prefix and a GUID generated above.
+            await master.ExecuteAsync(
+                $"IF DB_ID(@name) IS NOT NULL BEGIN ALTER DATABASE [{name}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{name}]; END;",
+                new { name });
+        }
     }
 
     [LocalDbFact]
