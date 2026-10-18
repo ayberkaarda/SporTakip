@@ -27,7 +27,7 @@ public sealed class SchemaMigratorTests
             var expected = typeof(SchemaMigrator).Assembly.GetManifestResourceNames()
                 .Where(n => n.StartsWith("Migrations.0", StringComparison.Ordinal) && n.EndsWith(".sql", StringComparison.Ordinal))
                 .Select(n => n["Migrations.".Length..]).OrderBy(n => n).ToArray();
-            expected.Should().Contain("004_butunluk.sql");
+            expected.Should().Contain("005_butunluk_duzeltme.sql");
             var before = (await connection.QueryAsync<(string Surum, DateTime UygulamaTarihi)>(
                 "SELECT Surum, UygulamaTarihi FROM dbo.SchemaVersion ORDER BY Surum;")).ToArray();
             before.Select(v => v.Surum).Should().Equal(expected);

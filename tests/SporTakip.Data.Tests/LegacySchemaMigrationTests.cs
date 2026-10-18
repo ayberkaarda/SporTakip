@@ -82,7 +82,7 @@ public sealed class LegacySchemaMigrationTests
             var expectedVersions = typeof(SchemaMigrator).Assembly.GetManifestResourceNames()
                 .Where(n => n.StartsWith("Migrations.0", StringComparison.Ordinal) && n.EndsWith(".sql", StringComparison.Ordinal))
                 .Select(n => n["Migrations.".Length..]).OrderBy(n => n, StringComparer.Ordinal).ToArray();
-            expectedVersions.Should().Contain("004_butunluk.sql");
+            expectedVersions.Should().Contain("005_butunluk_duzeltme.sql");
             var versions = (await connection.QueryAsync<(string Surum, DateTime UygulamaTarihi)>(
                 "SELECT Surum, UygulamaTarihi FROM dbo.SchemaVersion ORDER BY Surum;")).ToArray();
             versions.Select(v => v.Surum).Should().Equal(expectedVersions);
