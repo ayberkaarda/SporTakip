@@ -7,20 +7,32 @@ Bu uygulama, sporcuların antrenman ve gelişim süreçlerini takip etmek amacı
 
 **Gereksinimler**
 
-- Windows
+- Windows 10 sürüm 2004 (build 19041) veya üstü, ya da Windows 11. Arayüz projesi `net10.0-windows10.0.19041.0` hedefler; grafik bileşeni bu sürümü istiyor.
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - SQL Server LocalDB (Visual Studio ile gelir) veya SQL Server Express
 
-1. **Veritabanını Oluşturma**  
-   Komutları proje kök klasöründe çalıştırın. Önce boş veritabanını açın, sonra şema betiklerini sırayla uygulayın:
+1. **Veritabanı**  
+   Elle bir şey yapmanız gerekmez. Program her açılışta bağlantı ayarındaki veritabanını yoksa oluşturur ve eksik şema betiklerini sırayla uygular (`SchemaMigrator`). Uygulanan betikler veritabanındaki `SchemaVersion` tablosuna yazılır, bir sonraki açılışta tekrar çalışmaz. İşlem uzun sürerse kısa bir "Veritabanı hazırlanıyor" penceresi görünür; sunucuya ulaşılamazsa hata günlüğe yazılır ve bir uyarıdan sonra program yine açılır.
+
+   Otomatik uygulanan betikler:
+
+   - `database\001_initial.sql`: tablolar
+   - `database\002_cascade_fk.sql`: sporcu silinince kayıtlarının da silinmesi
+   - `database\003_olcumler.sql`: takip kayıtlarına bağlı ölçümler
+   - `database\004_butunluk.sql`: veri bütünlüğü kuralları ve antrenmanlara gün alanı
+
+   **Alternatif: betikleri elle çalıştırma**  
+   İsterseniz aynı betikleri `sqlcmd` ile kendiniz de uygulayabilirsiniz. Komutları proje kök klasöründe çalıştırın:
 
    ```bat
    sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "CREATE DATABASE SporTakip"
    sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\001_initial.sql
    sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\002_cascade_fk.sql
+   sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\003_olcumler.sql
+   sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\004_butunluk.sql
    ```
 
-   Örnek veri isterseniz (isteğe bağlı):
+   Örnek veri isterseniz (isteğe bağlı, otomatik çalışmaz):
 
    ```bat
    sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\seed.sql
@@ -47,7 +59,7 @@ Bu uygulama, sporcuların antrenman ve gelişim süreçlerini takip etmek amacı
    ```
 
 **Alternatif: Yedekten Yükleme**  
-Eski yöntemle, proje klasöründeki `SporTakip.bak` dosyasını kendi SQL Server sunucunuza **restore** edebilirsiniz. Bu durumda yalnızca `database\002_cascade_fk.sql` betiğini çalıştırmanız yeterlidir (sporcu silindiğinde kayıtlarının da silinmesi için).
+Eski yöntemle, proje klasöründeki `SporTakip.bak` dosyasını kendi SQL Server sunucunuza **restore** edebilirsiniz. Eksik betikler program ilk açıldığında otomatik uygulanır; elle yapmak isterseniz `database\002_cascade_fk.sql`, `database\003_olcumler.sql` ve `database\004_butunluk.sql` betiklerini sırayla çalıştırın.
 
 ---
 
@@ -57,7 +69,7 @@ Eski yöntemle, proje klasöründeki `SporTakip.bak` dosyasını kendi SQL Serve
 
 ```
 src/
-  SporTakip.Domain/        Varlıklar (Sporcu, Antrenman, Takip)
+  SporTakip.Domain/        Varlıklar (Sporcu, Antrenman, Takip, Olcum)
   SporTakip.Application/   Servisler ve doğrulama kuralları
   SporTakip.Data/          Dapper ile SQL Server repository'leri
   SporTakip.WinForms/      Arayüz, DI ve appsettings.json
@@ -113,7 +125,10 @@ dotnet test
    - Sporcu listesinden birini seçin  
    - Antrenman adını girin (örn: **Göğüs Günü**)  
    - Detaylarını yazın (örn: **Chest Press, Incline Dumbbell Press**)  
+   - İsterseniz `Gün` listesinden haftanın bir gününü seçin (boş bırakılırsa **Atanmamış** kalır)  
 3. `Kaydet` butonuna tıklayın
+
+Var olan bir antrenmanın gününü değiştirmek için `Sporcu Detayı` ekranında antrenmanı seçip `Düzenle` butonuna basın ve `Gün` alanını değiştirin.
 
 ---
 
@@ -123,8 +138,13 @@ dotnet test
 2. Açılan formda:  
    - Sporcu seçin  
    - Takip tarihini belirleyin  
-   - Açıklama girin (örn: **Ağırlık: 95kg, setler tamamlandı**)  
-3. `Kaydet` butonuna tıklayın
+   - Açıklama girin (örn: **Setler tamamlandı**)  
+3. İsterseniz `Ölçümler (isteğe bağlı)` bölümünden ölçüm ekleyin:  
+   - `Tür` (örn: **Kilo**), `Değer` (örn: **95** ya da **72,5**) ve `Birim` (örn: **kg**) girin  
+   - `Ölçüm Ekle` butonuna basın (ölçüm kutularındayken `Enter` de ekler); yanlış eklenen satırı seçip `Çıkar` ile kaldırın  
+4. `Kaydet` butonuna tıklayın
+
+Kaydedilmiş bir takibin ölçümleri `Sporcu Detayı` ekranında takip seçilip `Düzenle` ile açılan pencerede eklenebilir, güncellenebilir veya silinebilir.
 
 ---
 
@@ -141,9 +161,44 @@ dotnet test
 - Bir kaydı düzenlemek için tablodan seçip altındaki `Düzenle` butonuna basın ya da satıra çift tıklayın. Antrenmanda ad ve detaylar, takipte tarih ve açıklama değiştirilebilir.
 - Silmek için kaydı seçip `Sil` butonuna basın ya da `Delete` tuşunu kullanın; silmeden önce onay istenir.
 
+**Ölçüm grafiği**
+
+1. `Sporcu Detayı` ekranında sporcuyu seçip `Grafik` butonuna basın  
+2. `Ölçüm türü` listesinden bir tür seçin (örn: **Kilo**); o türün değerleri tarihe göre çizgi grafik olarak gösterilir  
+
+**CSV raporu**
+
+1. `Sporcu Detayı` ekranında sporcuyu seçip `CSV Aktar` butonuna basın  
+2. Dosyanın kaydedileceği yeri seçin  
+
+Dosya `;` ayırıcılı ve UTF-8 (BOM'lu) yazılır; Türkçe Excel'de çift tıklayınca sütunlar ve Türkçe karakterler doğru açılır. Ölçümlü takipler her ölçüm için ayrı satırda yer alır.
+
+**Haftalık program**
+
+1. `Sporcu Detayı` ekranında sporcuyu seçip `Haftalık Program` butonuna basın  
+2. Antrenmanlar Pazartesi'den Pazar'a gün kartlarında listelenir; güne atanmamış antrenmanlar altta ayrı bir şeritte gösterilir  
+
+**Klavye**
+
+Pencerelerde `Tab` kontroller arasında soldan sağa, yukarıdan aşağıya ilerler. `Enter` kaydeder; diyalog pencereleri `Esc` ile kapanır. Ana ekranda `Esc` programı kapatmaz.
+
+---
+
+## 🎨 Tema
+
+Uygulamada **Açık** ve **Koyu** olmak üzere iki tema var. Ana ekranın sağ üstündeki tema düğmesinden `Sistem teması`, `Açık` veya `Koyu` seçilebilir; seçim açık pencerelerin hepsine hemen uygulanır.
+
+- Seçim `%LOCALAPPDATA%\SporTakip\tema.json` dosyasına yazılır ve sonraki açılışlarda kullanılır.
+- Bu dosya yoksa `src\SporTakip.WinForms\appsettings.json` içindeki `"Tema"` değeri (`Acik`, `Koyu` veya `Sistem`) geçerlidir.
+- `Sistem` seçiliyken Windows'un uygulama teması (açık/koyu) izlenir.
+
+Renkler, yazı tipleri ve aralıklar tek yerde, `src\SporTakip.WinForms\Theme\` klasöründe tanımlıdır.
+
 ---
 
 ## 🖼️ Ekran Görüntüleri
+
+Aşağıdaki görüntüler önceki tasarıma aittir; güncel arayüz yukarıdaki temalarla açılır.
 
 ### Ana Sayfa
 ![Ana Sayfa](screenshots/anasayfa.png)
