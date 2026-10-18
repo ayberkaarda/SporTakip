@@ -33,7 +33,7 @@ public sealed class RepositoryTests
         (await _sporcular.GetAllAsync()).Should().ContainEquivalentOf(sporcu);
 
         sporcu.Ad = "Özgür";
-        sporcu.SporDali = null;
+        sporcu.SporDali = "Atletizm";
         (await _sporcular.UpdateAsync(sporcu)).Should().BeTrue();
         (await _sporcular.GetByIdAsync(sporcu.Id)).Should().BeEquivalentTo(sporcu);
         (await _sporcular.DeleteAsync(sporcu.Id)).Should().BeTrue();
