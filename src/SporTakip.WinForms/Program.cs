@@ -71,6 +71,9 @@ static class Program
         builder.Services.AddTransient<AntrenmanEkleForm>();
         builder.Services.AddTransient<TakipEkleForm>();
         builder.Services.AddTransient<SporcuDetayForm>();
+        builder.Services.AddTransient<SporcuDuzenleForm>();
+        builder.Services.AddTransient<AntrenmanDuzenleForm>();
+        builder.Services.AddTransient<TakipDuzenleForm>();
 
         return builder.Build();
     }

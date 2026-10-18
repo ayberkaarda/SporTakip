@@ -31,14 +31,29 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SporcuDetayForm));
             this.cmbSporcular = new System.Windows.Forms.ComboBox();
             this.btnGuncelle = new System.Windows.Forms.Button();
-            this.lstAntrenmanlar = new System.Windows.Forms.ListBox();
-            this.lstTakipler = new System.Windows.Forms.ListBox();
+            System.Windows.Forms.DataGridViewCellStyle antrenmanBaslikStili = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle antrenmanHucreStili = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle takipBaslikStili = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle takipHucreStili = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle takipTarihStili = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dgvAntrenmanlar = new System.Windows.Forms.DataGridView();
+            this.colAntrenmanAdi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDetaylar = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTakipler = new System.Windows.Forms.DataGridView();
+            this.colTarih = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colAciklama = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnAntrenmanDuzenle = new System.Windows.Forms.Button();
+            this.btnAntrenmanSil = new System.Windows.Forms.Button();
+            this.btnTakipDuzenle = new System.Windows.Forms.Button();
+            this.btnTakipSil = new System.Windows.Forms.Button();
             this.lblAntrenman = new System.Windows.Forms.Label();
             this.lblTakip = new System.Windows.Forms.Label();
             this.btnkapat = new System.Windows.Forms.Button();
             this.btnAsagial = new System.Windows.Forms.Button();
             this.lblSporcu = new System.Windows.Forms.Label();
             this.lblBaslik = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAntrenmanlar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTakipler)).BeginInit();
             this.SuspendLayout();
             //
             // cmbSporcular
@@ -67,29 +82,200 @@
             this.btnGuncelle.UseVisualStyleBackColor = false;
             this.btnGuncelle.Click += new System.EventHandler(this.btnGuncelle_Click);
             //
-            // lstAntrenmanlar
+            // dgvAntrenmanlar
             //
-            this.lstAntrenmanlar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstAntrenmanlar.FormattingEnabled = true;
-            this.lstAntrenmanlar.HorizontalScrollbar = true;
-            this.lstAntrenmanlar.IntegralHeight = false;
-            this.lstAntrenmanlar.ItemHeight = 17;
-            this.lstAntrenmanlar.Location = new System.Drawing.Point(24, 182);
-            this.lstAntrenmanlar.Name = "lstAntrenmanlar";
-            this.lstAntrenmanlar.Size = new System.Drawing.Size(230, 106);
-            this.lstAntrenmanlar.TabIndex = 2;
+            this.dgvAntrenmanlar.AllowUserToAddRows = false;
+            this.dgvAntrenmanlar.AllowUserToDeleteRows = false;
+            this.dgvAntrenmanlar.AllowUserToResizeRows = false;
+            this.dgvAntrenmanlar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvAntrenmanlar.BackgroundColor = System.Drawing.Color.White;
+            this.dgvAntrenmanlar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dgvAntrenmanlar.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvAntrenmanlar.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            antrenmanBaslikStili.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            antrenmanBaslikStili.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            antrenmanBaslikStili.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            antrenmanBaslikStili.ForeColor = System.Drawing.Color.White;
+            antrenmanBaslikStili.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            antrenmanBaslikStili.SelectionForeColor = System.Drawing.Color.White;
+            antrenmanBaslikStili.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAntrenmanlar.ColumnHeadersDefaultCellStyle = antrenmanBaslikStili;
+            this.dgvAntrenmanlar.ColumnHeadersHeight = 28;
+            this.dgvAntrenmanlar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvAntrenmanlar.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colAntrenmanAdi,
+            this.colDetaylar});
+            antrenmanHucreStili.BackColor = System.Drawing.Color.White;
+            antrenmanHucreStili.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            antrenmanHucreStili.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
+            antrenmanHucreStili.SelectionForeColor = System.Drawing.Color.White;
+            antrenmanHucreStili.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAntrenmanlar.DefaultCellStyle = antrenmanHucreStili;
+            this.dgvAntrenmanlar.EnableHeadersVisualStyles = false;
+            this.dgvAntrenmanlar.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(246)))));
+            this.dgvAntrenmanlar.Location = new System.Drawing.Point(24, 182);
+            this.dgvAntrenmanlar.MultiSelect = false;
+            this.dgvAntrenmanlar.Name = "dgvAntrenmanlar";
+            this.dgvAntrenmanlar.ReadOnly = true;
+            this.dgvAntrenmanlar.RowHeadersVisible = false;
+            this.dgvAntrenmanlar.RowTemplate.Height = 24;
+            this.dgvAntrenmanlar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvAntrenmanlar.Size = new System.Drawing.Size(455, 106);
+            this.dgvAntrenmanlar.StandardTab = true;
+            this.dgvAntrenmanlar.TabIndex = 2;
+            this.dgvAntrenmanlar.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAntrenmanlar_CellDoubleClick);
+            this.dgvAntrenmanlar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvAntrenmanlar_KeyDown);
             //
-            // lstTakipler
+            // colAntrenmanAdi
             //
-            this.lstTakipler.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstTakipler.FormattingEnabled = true;
-            this.lstTakipler.HorizontalScrollbar = true;
-            this.lstTakipler.IntegralHeight = false;
-            this.lstTakipler.ItemHeight = 17;
-            this.lstTakipler.Location = new System.Drawing.Point(24, 326);
-            this.lstTakipler.Name = "lstTakipler";
-            this.lstTakipler.Size = new System.Drawing.Size(230, 100);
-            this.lstTakipler.TabIndex = 3;
+            this.colAntrenmanAdi.DataPropertyName = "AntrenmanAdi";
+            this.colAntrenmanAdi.FillWeight = 40F;
+            this.colAntrenmanAdi.HeaderText = "Antrenman";
+            this.colAntrenmanAdi.MinimumWidth = 80;
+            this.colAntrenmanAdi.Name = "colAntrenmanAdi";
+            this.colAntrenmanAdi.ReadOnly = true;
+            //
+            // colDetaylar
+            //
+            this.colDetaylar.DataPropertyName = "Detaylar";
+            this.colDetaylar.FillWeight = 60F;
+            this.colDetaylar.HeaderText = "Detaylar";
+            this.colDetaylar.MinimumWidth = 80;
+            this.colDetaylar.Name = "colDetaylar";
+            this.colDetaylar.ReadOnly = true;
+            //
+            // dgvTakipler
+            //
+            this.dgvTakipler.AllowUserToAddRows = false;
+            this.dgvTakipler.AllowUserToDeleteRows = false;
+            this.dgvTakipler.AllowUserToResizeRows = false;
+            this.dgvTakipler.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvTakipler.BackgroundColor = System.Drawing.Color.White;
+            this.dgvTakipler.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dgvTakipler.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvTakipler.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            takipBaslikStili.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            takipBaslikStili.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            takipBaslikStili.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            takipBaslikStili.ForeColor = System.Drawing.Color.White;
+            takipBaslikStili.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            takipBaslikStili.SelectionForeColor = System.Drawing.Color.White;
+            takipBaslikStili.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTakipler.ColumnHeadersDefaultCellStyle = takipBaslikStili;
+            this.dgvTakipler.ColumnHeadersHeight = 28;
+            this.dgvTakipler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvTakipler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colTarih,
+            this.colAciklama});
+            takipHucreStili.BackColor = System.Drawing.Color.White;
+            takipHucreStili.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            takipHucreStili.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
+            takipHucreStili.SelectionForeColor = System.Drawing.Color.White;
+            takipHucreStili.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTakipler.DefaultCellStyle = takipHucreStili;
+            this.dgvTakipler.EnableHeadersVisualStyles = false;
+            this.dgvTakipler.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(246)))));
+            this.dgvTakipler.Location = new System.Drawing.Point(24, 326);
+            this.dgvTakipler.MultiSelect = false;
+            this.dgvTakipler.Name = "dgvTakipler";
+            this.dgvTakipler.ReadOnly = true;
+            this.dgvTakipler.RowHeadersVisible = false;
+            this.dgvTakipler.RowTemplate.Height = 24;
+            this.dgvTakipler.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvTakipler.Size = new System.Drawing.Size(455, 100);
+            this.dgvTakipler.StandardTab = true;
+            this.dgvTakipler.TabIndex = 3;
+            this.dgvTakipler.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTakipler_CellDoubleClick);
+            this.dgvTakipler.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvTakipler_KeyDown);
+            //
+            // colTarih
+            //
+            this.colTarih.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colTarih.DataPropertyName = "Tarih";
+            takipTarihStili.Format = "d";
+            this.colTarih.DefaultCellStyle = takipTarihStili;
+            this.colTarih.HeaderText = "Tarih";
+            this.colTarih.MinimumWidth = 80;
+            this.colTarih.Name = "colTarih";
+            this.colTarih.ReadOnly = true;
+            this.colTarih.Width = 100;
+            //
+            // colAciklama
+            //
+            this.colAciklama.DataPropertyName = "Aciklama";
+            this.colAciklama.FillWeight = 100F;
+            this.colAciklama.HeaderText = "Açıklama";
+            this.colAciklama.MinimumWidth = 80;
+            this.colAciklama.Name = "colAciklama";
+            this.colAciklama.ReadOnly = true;
+            //
+            // btnAntrenmanDuzenle
+            //
+            this.btnAntrenmanDuzenle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnAntrenmanDuzenle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAntrenmanDuzenle.FlatAppearance.BorderSize = 0;
+            this.btnAntrenmanDuzenle.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
+            this.btnAntrenmanDuzenle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAntrenmanDuzenle.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnAntrenmanDuzenle.ForeColor = System.Drawing.Color.White;
+            this.btnAntrenmanDuzenle.Location = new System.Drawing.Point(293, 151);
+            this.btnAntrenmanDuzenle.Name = "btnAntrenmanDuzenle";
+            this.btnAntrenmanDuzenle.Size = new System.Drawing.Size(90, 26);
+            this.btnAntrenmanDuzenle.TabIndex = 10;
+            this.btnAntrenmanDuzenle.Text = "Düzenle";
+            this.btnAntrenmanDuzenle.UseVisualStyleBackColor = false;
+            this.btnAntrenmanDuzenle.Click += new System.EventHandler(this.btnAntrenmanDuzenle_Click);
+            //
+            // btnAntrenmanSil
+            //
+            this.btnAntrenmanSil.BackColor = System.Drawing.Color.White;
+            this.btnAntrenmanSil.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAntrenmanSil.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(32)))), ((int)(((byte)(38)))));
+            this.btnAntrenmanSil.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(236)))), ((int)(((byte)(236)))));
+            this.btnAntrenmanSil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAntrenmanSil.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnAntrenmanSil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(32)))), ((int)(((byte)(38)))));
+            this.btnAntrenmanSil.Location = new System.Drawing.Point(389, 151);
+            this.btnAntrenmanSil.Name = "btnAntrenmanSil";
+            this.btnAntrenmanSil.Size = new System.Drawing.Size(90, 26);
+            this.btnAntrenmanSil.TabIndex = 11;
+            this.btnAntrenmanSil.Text = "Sil";
+            this.btnAntrenmanSil.UseVisualStyleBackColor = false;
+            this.btnAntrenmanSil.Click += new System.EventHandler(this.btnAntrenmanSil_Click);
+            //
+            // btnTakipDuzenle
+            //
+            this.btnTakipDuzenle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnTakipDuzenle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnTakipDuzenle.FlatAppearance.BorderSize = 0;
+            this.btnTakipDuzenle.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
+            this.btnTakipDuzenle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTakipDuzenle.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnTakipDuzenle.ForeColor = System.Drawing.Color.White;
+            this.btnTakipDuzenle.Location = new System.Drawing.Point(293, 295);
+            this.btnTakipDuzenle.Name = "btnTakipDuzenle";
+            this.btnTakipDuzenle.Size = new System.Drawing.Size(90, 26);
+            this.btnTakipDuzenle.TabIndex = 12;
+            this.btnTakipDuzenle.Text = "Düzenle";
+            this.btnTakipDuzenle.UseVisualStyleBackColor = false;
+            this.btnTakipDuzenle.Click += new System.EventHandler(this.btnTakipDuzenle_Click);
+            //
+            // btnTakipSil
+            //
+            this.btnTakipSil.BackColor = System.Drawing.Color.White;
+            this.btnTakipSil.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnTakipSil.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(32)))), ((int)(((byte)(38)))));
+            this.btnTakipSil.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(236)))), ((int)(((byte)(236)))));
+            this.btnTakipSil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTakipSil.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnTakipSil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(32)))), ((int)(((byte)(38)))));
+            this.btnTakipSil.Location = new System.Drawing.Point(389, 295);
+            this.btnTakipSil.Name = "btnTakipSil";
+            this.btnTakipSil.Size = new System.Drawing.Size(90, 26);
+            this.btnTakipSil.TabIndex = 13;
+            this.btnTakipSil.Text = "Sil";
+            this.btnTakipSil.UseVisualStyleBackColor = false;
+            this.btnTakipSil.Click += new System.EventHandler(this.btnTakipSil_Click);
             //
             // lblAntrenman
             //
@@ -189,8 +375,12 @@
             this.Controls.Add(this.btnAsagial);
             this.Controls.Add(this.lblTakip);
             this.Controls.Add(this.lblAntrenman);
-            this.Controls.Add(this.lstTakipler);
-            this.Controls.Add(this.lstAntrenmanlar);
+            this.Controls.Add(this.btnTakipSil);
+            this.Controls.Add(this.btnTakipDuzenle);
+            this.Controls.Add(this.btnAntrenmanSil);
+            this.Controls.Add(this.btnAntrenmanDuzenle);
+            this.Controls.Add(this.dgvTakipler);
+            this.Controls.Add(this.dgvAntrenmanlar);
             this.Controls.Add(this.btnGuncelle);
             this.Controls.Add(this.cmbSporcular);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
@@ -201,6 +391,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Spor Istanbul | Sporcu Detayı";
             this.Load += new System.EventHandler(this.SporcuDetayForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAntrenmanlar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTakipler)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,8 +402,16 @@
 
         private System.Windows.Forms.ComboBox cmbSporcular;
         private System.Windows.Forms.Button btnGuncelle;
-        private System.Windows.Forms.ListBox lstAntrenmanlar;
-        private System.Windows.Forms.ListBox lstTakipler;
+        private System.Windows.Forms.DataGridView dgvAntrenmanlar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAntrenmanAdi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDetaylar;
+        private System.Windows.Forms.DataGridView dgvTakipler;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTarih;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAciklama;
+        private System.Windows.Forms.Button btnAntrenmanDuzenle;
+        private System.Windows.Forms.Button btnAntrenmanSil;
+        private System.Windows.Forms.Button btnTakipDuzenle;
+        private System.Windows.Forms.Button btnTakipSil;
         private System.Windows.Forms.Label lblAntrenman;
         private System.Windows.Forms.Label lblTakip;
         private System.Windows.Forms.Button btnkapat;
