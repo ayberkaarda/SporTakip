@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -21,6 +22,8 @@ namespace SporTakip
             GunComboHelper.Doldur(cmbGun);
             if (components == null) components = new System.ComponentModel.Container();
             _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
+            ThemeApplier.HataSaglayici(_errors);
+            KartEkle(lblSporcu, comboSporcular, label1, txtAntrenmanName, label2, txtDetaylar, lblGun, cmbGun, btnKaydet);
         }
 
         private async void AntrenmanEkleForm_Load(object sender, EventArgs e)

@@ -59,25 +59,6 @@ namespace SporTakip.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
-        /// </summary>
-        internal static System.Drawing.Bitmap background {
-            get {
-                object obj = ResourceManager.GetObject("background", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
-        /// </summary>
-        internal static System.Drawing.Bitmap footerbg {
-            get {
-                object obj = ResourceManager.GetObject("footerbg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
+
     }
 }

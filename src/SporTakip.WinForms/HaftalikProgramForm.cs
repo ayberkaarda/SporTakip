@@ -7,19 +7,13 @@ using System.Windows.Forms;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Application.Reporting;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
     /// <summary>Bir sporcunun antrenmanlarını haftanın günlerine göre yan yana kartlarda gösterir.</summary>
-    public class HaftalikProgramForm : BorderlessForm
+    public class HaftalikProgramForm : BorderlessForm, IThemeAware
     {
-        // OlcumGrafikForm ile aynı koyu lacivert tema.
-        private static readonly Color FormArkaPlan = Color.FromArgb(8, 22, 64);
-        private static readonly Color KartArkaPlan = Color.FromArgb(14, 34, 88);
-        private static readonly Color OgeArkaPlan = Color.FromArgb(24, 50, 116);
-        private static readonly Color IkincilYazi = Color.FromArgb(170, 188, 228);
-        private static readonly Color VurguRengi = Color.FromArgb(240, 122, 40);
-
         // Kartlar bu genişliğin altına inmez; pencere ekrana sığmazsa gün alanı yatay kayar.
         private const int KartMinGenislik = 118;
 
@@ -47,6 +41,24 @@ namespace SporTakip
             _antrenmanService = antrenmanService;
             _ipucu = new ToolTip(components) { AutoPopDelay = 15000, InitialDelay = 400 };
             InitializeComponent();
+            ThemeApplier.Rol(KontrolRolu.IkincilMetin, lblSporcu, lblOzet);
+            ThemeApplier.Rol(lblBos, KontrolRolu.BosDurum);
+        }
+
+        /// <summary>Gün kartları ve antrenman öğeleri token renkleriyle yeniden boyanır.</summary>
+        public void TemaUygula(ThemePalette palet)
+        {
+            pnlAtanmamis.BackColor = palet.Surface;
+            foreach (Panel kart in _gunKartlari) kart.BackColor = palet.Surface;
+            foreach (FlowLayoutPanel liste in _gunListeleri.Append(flwAtanmamis))
+                foreach (AntrenmanOgesi oge in liste.Controls.OfType<AntrenmanOgesi>())
+                {
+                    oge.BackColor = palet.SurfaceAlt;
+                    oge.ForeColor = palet.TextPrimary;
+                    oge.DetayRengi = palet.TextSecondary;
+                    oge.Invalidate();
+                }
+            Invalidate(true);
         }
 
         /// <summary>Pencere gösterilmeden önce hangi sporcunun programının gösterileceğini verir.</summary>
@@ -63,9 +75,6 @@ namespace SporTakip
             lblBaslik = new Label
             {
                 AutoSize = true,
-                BackColor = Color.Transparent,
-                Font = new Font("Segoe UI Semibold", 14F, FontStyle.Regular, GraphicsUnit.Point, 162),
-                ForeColor = Color.White,
                 Location = new Point(18, 14),
                 Name = "lblBaslik",
                 Text = "Haftalık Program",
@@ -73,8 +82,6 @@ namespace SporTakip
             lblSporcu = new Label
             {
                 AutoEllipsis = true,
-                BackColor = Color.Transparent,
-                ForeColor = IkincilYazi,
                 Location = new Point(182, 19),
                 Name = "lblSporcu",
                 Size = new Size(420, 20),
@@ -82,8 +89,6 @@ namespace SporTakip
             lblOzet = new Label
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.Transparent,
-                ForeColor = IkincilYazi,
                 Location = new Point(600, 46),
                 Name = "lblOzet",
                 Size = new Size(360, 20),
@@ -92,20 +97,13 @@ namespace SporTakip
             btnkapat = new Button
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.Transparent,
                 DialogResult = DialogResult.Cancel,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point, 162),
-                ForeColor = Color.White,
                 Location = new Point(934, 0),
                 Name = "btnkapat",
                 Size = new Size(46, 32),
                 TabStop = false,
                 Text = "×",
-                UseVisualStyleBackColor = false,
             };
-            btnkapat.FlatAppearance.BorderSize = 0;
-            btnkapat.FlatAppearance.MouseOverBackColor = CloseHoverColor;
 
             // Gün kartları: 7 eşit sütun; dar pencerede KartMinGenislik altına inmez, kaydırılır.
             tblGunler = new TableLayoutPanel
@@ -134,15 +132,11 @@ namespace SporTakip
                 Size = new Size(952, 368),
             };
             pnlGunler.Controls.Add(tblGunler);
-            KoyuKaydirmaCubugu(pnlGunler);
 
             // Güne atanmamış antrenmanlar: kartların altında ayrı şerit, yalnızca varsa görünür.
             lblAtanmamis = new Label
             {
                 AutoSize = true,
-                BackColor = Color.Transparent,
-                Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 162),
-                ForeColor = Color.White,
                 Location = new Point(10, 8),
                 Name = "lblAtanmamis",
                 Text = GunComboHelper.AtanmamisMetni,
@@ -161,23 +155,18 @@ namespace SporTakip
             pnlAtanmamis = new Panel
             {
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                BackColor = KartArkaPlan,
                 Location = new Point(18, 448),
                 Name = "pnlAtanmamis",
                 Size = new Size(944, 96),
                 Visible = false,
             };
-            KoyuKaydirmaCubugu(flwAtanmamis);
             pnlAtanmamis.Controls.Add(flwAtanmamis);
             pnlAtanmamis.Controls.Add(lblAtanmamis);
-            pnlAtanmamis.Paint += (s, e) => KenarCiz(e.Graphics, pnlAtanmamis, IkincilYazi, dashed: true);
+            pnlAtanmamis.Paint += (s, e) => KenarCiz(e.Graphics, pnlAtanmamis, ThemeManager.Palet.BorderStrong, dashed: true);
 
             lblBos = new Label
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                BackColor = KartArkaPlan,
-                Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 162),
-                ForeColor = IkincilYazi,
                 Location = new Point(18, 76),
                 Name = "lblBos",
                 Size = new Size(944, 468),
@@ -187,7 +176,6 @@ namespace SporTakip
 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = FormArkaPlan;
             CancelButton = btnkapat;
             ClientSize = new Size(980, 560);
             Controls.Add(lblBos);
@@ -197,7 +185,6 @@ namespace SporTakip
             Controls.Add(lblOzet);
             Controls.Add(lblSporcu);
             Controls.Add(lblBaslik);
-            Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 162);
             Name = "HaftalikProgramForm";
             ShowIcon = false;
             ShowInTaskbar = false;
@@ -212,9 +199,6 @@ namespace SporTakip
             var baslik = new Label
             {
                 AutoEllipsis = true,
-                BackColor = Color.Transparent,
-                Font = new Font("Segoe UI Semibold", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 162),
-                ForeColor = Color.White,
                 Location = new Point(10, 10),
                 Name = "lblGun" + (index + 1),
                 Size = new Size(110, 22),
@@ -222,11 +206,9 @@ namespace SporTakip
             };
             var sayi = new Label
             {
-                BackColor = Color.Transparent,
-                ForeColor = IkincilYazi,
                 Location = new Point(10, 32),
                 Name = "lblGunSayi" + (index + 1),
-                Size = new Size(110, 18),
+                Size = new Size(110, 20),
                 Text = "—",
             };
             var liste = new FlowLayoutPanel
@@ -241,10 +223,10 @@ namespace SporTakip
                 WrapContents = false,
             };
             liste.ClientSizeChanged += (s, e) => OgeGenislikleriniAyarla(liste);
-            KoyuKaydirmaCubugu(liste);
+            ThemeApplier.Rol(baslik, KontrolRolu.Bolum);
+            ThemeApplier.Rol(sayi, KontrolRolu.IkincilMetin);
             var kart = new Panel
             {
-                BackColor = KartArkaPlan,
                 Dock = DockStyle.Fill,
                 Margin = new Padding(4, 4, 4, 4),
                 Name = "pnlGun" + (index + 1),
@@ -263,8 +245,8 @@ namespace SporTakip
             {
                 if (Equals(kart.Tag, true))
                 {
-                    // Bugünün kartı: üstte turuncu şerit.
-                    using var brush = new SolidBrush(VurguRengi);
+                    // Bugünün kartı: üstte vurgu renginde ince şerit.
+                    using var brush = new SolidBrush(ThemeManager.Palet.Accent);
                     e.Graphics.FillRectangle(brush, 0, 0, kart.ClientSize.Width, kart.LogicalToDeviceUnits(4));
                 }
             };
@@ -352,9 +334,9 @@ namespace SporTakip
             {
                 var oge = new AntrenmanOgesi(antrenman, sabitGenislik ? 3 : 4)
                 {
-                    BackColor = OgeArkaPlan,
-                    ForeColor = Color.White,
-                    DetayRengi = IkincilYazi,
+                    BackColor = ThemeManager.Palet.SurfaceAlt,
+                    ForeColor = ThemeManager.Palet.TextPrimary,
+                    DetayRengi = ThemeManager.Palet.TextSecondary,
                     Margin = new Padding(liste.LogicalToDeviceUnits(4)),
                 };
                 if (sabitGenislik) oge.Width = liste.LogicalToDeviceUnits(214);
@@ -390,24 +372,9 @@ namespace SporTakip
             if (yukseklik > liste.ClientSize.Height) Uygula(tam - SystemInformation.VerticalScrollBarWidth);
         }
 
-        [System.Runtime.InteropServices.DllImport("uxtheme.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
-        private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
-
-        /// <summary>Koyu temada açık renkli kaydırma çubukları göze batmasın (Windows 10 1809+; eski sürümde etkisiz).</summary>
-        private static void KoyuKaydirmaCubugu(Control control)
-        {
-            void Uygula()
-            {
-                try { SetWindowTheme(control.Handle, "DarkMode_Explorer", null); }
-                catch (Exception ex) when (ex is DllNotFoundException || ex is EntryPointNotFoundException) { }
-            }
-            if (control.IsHandleCreated) Uygula();
-            control.HandleCreated += (s, e) => Uygula();
-        }
-
         private static void KenarCiz(Graphics g, Control control, Color renk, bool dashed)
         {
-            using var pen = new Pen(Color.FromArgb(90, renk)) { DashStyle = dashed ? DashStyle.Dash : DashStyle.Solid };
+            using var pen = new Pen(renk) { DashStyle = dashed ? DashStyle.Dash : DashStyle.Solid };
             g.DrawRectangle(pen, 0, 0, control.ClientSize.Width - 1, control.ClientSize.Height - 1);
         }
 
@@ -425,7 +392,6 @@ namespace SporTakip
             private readonly string _ad;
             private readonly string _detay;
             private readonly int _detaySatir;
-            private Font _adFont;
 
             public AntrenmanOgesi(Antrenman antrenman, int detaySatir)
             {
@@ -441,7 +407,7 @@ namespace SporTakip
             [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
             public Color DetayRengi { get; set; }
 
-            private Font AdFont => _adFont ??= new Font(Font, FontStyle.Bold);
+            private static Font AdFont => ThemeTypography.GovdeVurgulu;
 
             private int Ic => LogicalToDeviceUnits(8);
 
@@ -478,25 +444,16 @@ namespace SporTakip
                 return Math.Min(olcu, satir * _detaySatir);
             }
 
-            protected override void OnFontChanged(EventArgs e)
-            {
-                _adFont?.Dispose();
-                _adFont = null;
-                base.OnFontChanged(e);
-            }
-
             protected override void OnPaint(PaintEventArgs e)
             {
                 Graphics g = e.Graphics;
-                g.Clear(Parent?.BackColor is Color pb && pb != Color.Transparent ? pb : KartArkaPlan);
+                g.Clear(ThemeApplier.ZeminRengi(this));
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                int r = LogicalToDeviceUnits(6);
+                int r = LogicalToDeviceUnits(ThemeScale.KoseOrta);
                 var rect = new Rectangle(0, 0, Width - 1, Height - 1);
                 using (GraphicsPath path = Yuvarlak(rect, r))
                 using (var brush = new SolidBrush(BackColor))
                     g.FillPath(brush, path);
-                using (var serit = new SolidBrush(VurguRengi))
-                    g.FillRectangle(serit, 0, r, LogicalToDeviceUnits(3), Math.Max(0, Height - r * 2));
                 g.SmoothingMode = SmoothingMode.None;
 
                 int w = Math.Max(1, Width - Ic * 2);
@@ -521,11 +478,6 @@ namespace SporTakip
                 return path;
             }
 
-            protected override void Dispose(bool disposing)
-            {
-                if (disposing) _adFont?.Dispose();
-                base.Dispose(disposing);
-            }
         }
     }
 }

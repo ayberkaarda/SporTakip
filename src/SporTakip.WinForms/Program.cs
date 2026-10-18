@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SporTakip;
 using SporTakip.Application;
 using SporTakip.Data;
+using SporTakip.Theme;
 
 static class Program
 {
@@ -39,6 +40,8 @@ static class Program
         using (host)
         {
             ErrorHandler.Initialize(host.Services.GetRequiredService<ILoggerFactory>());
+            // Tema ilk pencereden (bekleme penceresi dahil) önce belirlenir: kullanıcı seçimi > appsettings "Tema" > Sistem.
+            ThemeManager.Baslat(host.Services.GetRequiredService<IConfiguration>()["Tema"]);
             VeritabaniniHazirla(host.Services);
             // Composition root: ana pencere ve servisleri tek bir kapsamda; alt pencereler kendi kapsamlarını açar.
             using (IServiceScope scope = host.Services.CreateScope())

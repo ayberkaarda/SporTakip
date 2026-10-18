@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -35,6 +36,12 @@ namespace SporTakip
             _raporService = raporService;
             _scopeFactory = scopeFactory;
             InitializeComponent();
+            ThemeApplier.Rol(KontrolRolu.Bolum, lblAntrenman, lblTakip);
+            ThemeApplier.Rol(KontrolRolu.Tehlike, btnAntrenmanSil, btnTakipSil);
+            ThemeApplier.Rol(btnGuncelle, KontrolRolu.Birincil);
+            KartEkle(lblSporcu, cmbSporcular, btnGuncelle, btnHaftalikProgram, btnGrafik, btnCsvAktar);
+            KartEkle(lblAntrenman, btnAntrenmanDuzenle, btnAntrenmanSil, dgvAntrenmanlar);
+            KartEkle(lblTakip, btnTakipDuzenle, btnTakipSil, dgvTakipler);
             // Sütunlar Designer'da tanımlı; DataSource'un özelliklerinden yeni sütun üretilmesin.
             dgvAntrenmanlar.AutoGenerateColumns = false;
             dgvTakipler.AutoGenerateColumns = false;

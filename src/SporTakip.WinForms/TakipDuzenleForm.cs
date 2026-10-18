@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Application.Validation;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -28,6 +29,10 @@ namespace SporTakip
             InitializeComponent();
             if (components == null) components = new System.ComponentModel.Container();
             _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
+            ThemeApplier.HataSaglayici(_errors);
+            ThemeApplier.Rol(btnOlcumSil, KontrolRolu.Tehlike);
+            KartEkle(lblTarih, dtTarih, lblAciklama, txtAciklama, lblOlcumler, dgvOlcumler, lblOlcumGiris, cmbOlcumTur,
+                txtOlcumDeger, cmbOlcumBirim, btnOlcumEkle, btnOlcumGuncelle, btnOlcumSil, btnKaydet, btnIptal);
             OlcumUi.GridHazirla(dgvOlcumler);
             OlcumUi.BirimleriDoldur(cmbOlcumBirim);
             OlcumUi.IpucuAyarla(cmbOlcumTur, "Tür");

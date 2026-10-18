@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Application.Validation;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -22,6 +23,8 @@ namespace SporTakip
             txtAntrenmanAdi.MaxLength = ValidationConstants.AntrenmanAdiMaxLength;
             if (components == null) components = new System.ComponentModel.Container();
             _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
+            ThemeApplier.HataSaglayici(_errors);
+            KartEkle(lblAntrenmanAdi, txtAntrenmanAdi, lblDetaylar, txtDetaylar, lblGun, cmbGun, btnKaydet, btnIptal);
             // Çok satırlı kutuda Enter yeni satır ekler; kaydetmek için butona tıklanır veya Ctrl+Enter kullanılır.
             KeyPreview = true;
             KeyDown += (s, e) =>

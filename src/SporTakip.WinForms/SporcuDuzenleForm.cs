@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Application.Validation;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -22,6 +23,8 @@ namespace SporTakip
             txtSporDali.MaxLength = ValidationConstants.SporDaliMaxLength;
             if (components == null) components = new System.ComponentModel.Container();
             _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
+            ThemeApplier.HataSaglayici(_errors);
+            KartEkle(lblAd, txtAd, lblSporDali, txtSporDali, btnKaydet, btnIptal);
         }
 
         /// <summary>Pencere gösterilmeden önce düzenlenecek sporcuyu verir.</summary>

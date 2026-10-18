@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -20,9 +21,6 @@ namespace SporTakip
             var lblMesaj = new Label
             {
                 AutoSize = false,
-                BackColor = Color.Transparent,
-                Font = new Font("Segoe UI Semibold", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 162),
-                ForeColor = AccentColor,
                 Location = new Point(20, 18),
                 Name = "lblMesaj",
                 Size = new Size(280, 24),
@@ -39,7 +37,6 @@ namespace SporTakip
             };
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
             ClientSize = new Size(320, 80);
             Controls.Add(progress);
             Controls.Add(lblMesaj);
@@ -47,6 +44,7 @@ namespace SporTakip
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Spor Istanbul | Veritabanı hazırlanıyor";
+            ThemeApplier.Rol(lblMesaj, KontrolRolu.Bolum);
             ResumeLayout(false);
         }
 
