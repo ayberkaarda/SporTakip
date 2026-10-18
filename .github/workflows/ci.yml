@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore SporTakip.sln
+      - run: dotnet build SporTakip.sln -c Release --no-restore
+      - name: Start LocalDB
+        shell: pwsh
+        run: |
+          try {
+            sqllocaldb start MSSQLLocalDB
+            if ($LASTEXITCODE -ne 0) {
+              Write-Warning "LocalDB is unavailable; continuing."
+              $global:LASTEXITCODE = 0
+            } else {
+              "SPORTAKIP_TEST_CONNECTION=Server=(localdb)\MSSQLLocalDB;Integrated Security=true;TrustServerCertificate=True;" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            }
+          } catch {
+            Write-Warning "LocalDB is unavailable; continuing."
+          }
+      - run: dotnet test SporTakip.sln -c Release --no-build --logger "trx"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
+          if-no-files-found: warn
