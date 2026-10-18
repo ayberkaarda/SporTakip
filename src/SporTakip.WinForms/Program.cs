@@ -74,6 +74,7 @@ static class Program
         builder.Services.AddTransient<SporcuDuzenleForm>();
         builder.Services.AddTransient<AntrenmanDuzenleForm>();
         builder.Services.AddTransient<TakipDuzenleForm>();
+        builder.Services.AddTransient<OlcumGrafikForm>();
 
         return builder.Build();
     }
