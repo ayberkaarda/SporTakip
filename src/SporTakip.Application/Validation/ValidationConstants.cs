@@ -14,4 +14,10 @@ public static class ValidationConstants
 
     /// <summary>Antrenmanlar.AntrenmanAdi NVARCHAR(100) NULL</summary>
     public const int AntrenmanAdiMaxLength = 100;
+
+    /// <summary>Olcumler.Tur NVARCHAR(50) NOT NULL</summary>
+    public const int TurMaxLength = 50;
+
+    /// <summary>Olcumler.Birim NVARCHAR(20) NULL</summary>
+    public const int BirimMaxLength = 20;
 }

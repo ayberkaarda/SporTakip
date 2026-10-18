@@ -12,6 +12,7 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<ISporcuService, SporcuService>();
         services.AddScoped<IAntrenmanService, AntrenmanService>();
         services.AddScoped<ITakipService, TakipService>();
+        services.AddScoped<IOlcumService, OlcumService>();
         services.AddScoped<IRaporService, RaporService>();
         return services;
     }
