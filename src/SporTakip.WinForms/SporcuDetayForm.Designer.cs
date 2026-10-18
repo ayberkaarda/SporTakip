@@ -42,6 +42,9 @@
             this.dgvTakipler = new System.Windows.Forms.DataGridView();
             this.colTarih = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAciklama = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colOlcumler = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnGrafik = new System.Windows.Forms.Button();
+            this.btnCsvAktar = new System.Windows.Forms.Button();
             this.btnAntrenmanDuzenle = new System.Windows.Forms.Button();
             this.btnAntrenmanSil = new System.Windows.Forms.Button();
             this.btnTakipDuzenle = new System.Windows.Forms.Button();
@@ -166,7 +169,8 @@
             this.dgvTakipler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvTakipler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colTarih,
-            this.colAciklama});
+            this.colAciklama,
+            this.colOlcumler});
             takipHucreStili.BackColor = System.Drawing.Color.White;
             takipHucreStili.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             takipHucreStili.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
@@ -203,11 +207,53 @@
             // colAciklama
             //
             this.colAciklama.DataPropertyName = "Aciklama";
-            this.colAciklama.FillWeight = 100F;
+            this.colAciklama.FillWeight = 55F;
             this.colAciklama.HeaderText = "Açıklama";
             this.colAciklama.MinimumWidth = 80;
             this.colAciklama.Name = "colAciklama";
             this.colAciklama.ReadOnly = true;
+            //
+            // colOlcumler
+            //
+            this.colOlcumler.FillWeight = 45F;
+            this.colOlcumler.HeaderText = "Ölçümler";
+            this.colOlcumler.MinimumWidth = 80;
+            this.colOlcumler.Name = "colOlcumler";
+            this.colOlcumler.ReadOnly = true;
+            //
+            // btnGrafik
+            //
+            this.btnGrafik.BackColor = System.Drawing.Color.White;
+            this.btnGrafik.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnGrafik.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(246)))));
+            this.btnGrafik.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnGrafik.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnGrafik.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGrafik.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnGrafik.Location = new System.Drawing.Point(293, 108);
+            this.btnGrafik.Name = "btnGrafik";
+            this.btnGrafik.Size = new System.Drawing.Size(90, 34);
+            this.btnGrafik.TabIndex = 14;
+            this.btnGrafik.Text = "Grafik";
+            this.btnGrafik.UseVisualStyleBackColor = false;
+            this.btnGrafik.Click += new System.EventHandler(this.btnGrafik_Click);
+            //
+            // btnCsvAktar
+            //
+            this.btnCsvAktar.BackColor = System.Drawing.Color.White;
+            this.btnCsvAktar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnCsvAktar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(246)))));
+            this.btnCsvAktar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnCsvAktar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCsvAktar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCsvAktar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnCsvAktar.Location = new System.Drawing.Point(389, 108);
+            this.btnCsvAktar.Name = "btnCsvAktar";
+            this.btnCsvAktar.Size = new System.Drawing.Size(90, 34);
+            this.btnCsvAktar.TabIndex = 15;
+            this.btnCsvAktar.Text = "CSV Aktar";
+            this.btnCsvAktar.UseVisualStyleBackColor = false;
+            this.btnCsvAktar.Click += new System.EventHandler(this.btnCsvAktar_Click);
             //
             // btnAntrenmanDuzenle
             //
@@ -369,6 +415,8 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.btnkapat;
             this.ClientSize = new System.Drawing.Size(503, 450);
+            this.Controls.Add(this.btnCsvAktar);
+            this.Controls.Add(this.btnGrafik);
             this.Controls.Add(this.lblBaslik);
             this.Controls.Add(this.lblSporcu);
             this.Controls.Add(this.btnkapat);
@@ -408,6 +456,9 @@
         private System.Windows.Forms.DataGridView dgvTakipler;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTarih;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAciklama;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colOlcumler;
+        private System.Windows.Forms.Button btnGrafik;
+        private System.Windows.Forms.Button btnCsvAktar;
         private System.Windows.Forms.Button btnAntrenmanDuzenle;
         private System.Windows.Forms.Button btnAntrenmanSil;
         private System.Windows.Forms.Button btnTakipDuzenle;
