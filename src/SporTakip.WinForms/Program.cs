@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SporTakip;
@@ -36,11 +39,51 @@ static class Program
         using (host)
         {
             ErrorHandler.Initialize(host.Services.GetRequiredService<ILoggerFactory>());
+            VeritabaniniHazirla(host.Services);
             // Composition root: ana pencere ve servisleri tek bir kapsamda; alt pencereler kendi kapsamlarını açar.
             using (IServiceScope scope = host.Services.CreateScope())
             {
                 Application.Run(scope.ServiceProvider.GetRequiredService<Form1>());
             }
+        }
+    }
+
+    // Kısa süren güncellemelerde bekleme penceresi hiç görünmesin (yanıp sönmesin).
+    private static readonly TimeSpan BeklemePenceresiGecikmesi = TimeSpan.FromMilliseconds(300);
+    private static readonly TimeSpan MigrationZamanAsimi = TimeSpan.FromMinutes(2);
+
+    /// <summary>
+    /// Ana pencereden önce veritabanı şemasını günceller. Hata olursa günlüğe yazar, kullanıcıyı bilgilendirir
+    /// ve uygulama yine açılır; veritabanı yoksa ana pencere eskisi gibi kendi hata mesajını gösterir.
+    /// </summary>
+    private static void VeritabaniniHazirla(IServiceProvider services)
+    {
+        Task migration;
+        using var zamanAsimi = new CancellationTokenSource(MigrationZamanAsimi);
+        try
+        {
+            var migrator = services.GetRequiredService<SchemaMigrator>();
+            // İş parçacığı havuzunda başlatılır; senkron bağlantı açılışı bile UI iş parçacığını tutmaz.
+            migration = Task.Run(() => migrator.MigrateAsync(zamanAsimi.Token));
+            // Task.Wait hata durumunda AggregateException fırlatır; burada yalnızca bitişi bekliyoruz.
+            if (!((IAsyncResult)migration).AsyncWaitHandle.WaitOne(BeklemePenceresiGecikmesi))
+            {
+                // Ayrı bir mesaj döngüsü: pencere çizilmeye ve animasyon dönmeye devam eder.
+                using var bekleme = new VeritabaniHazirlikForm(migration);
+                Application.Run(bekleme);
+            }
+            migration.GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            ErrorHandler.Log(ex);
+            string neden = ex is OperationCanceledException
+                ? "Veritabanı belirlenen sürede yanıt vermedi."
+                : "Veritabanına bağlanılamadı ya da şema güncellemesi tamamlanamadı.";
+            MessageBox.Show(neden + Environment.NewLine + Environment.NewLine
+                + "Bağlantı ayarlarını (appsettings.json > ConnectionStrings:SporTakip) ve SQL Server'ın çalıştığını kontrol edin. "
+                + "Uygulama açılacak, ancak veritabanı işlemleri çalışmayabilir.",
+                "Veritabanı hazırlanamadı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 
@@ -66,6 +109,8 @@ static class Program
 
         builder.Services.AddSporTakipApplication();
         builder.Services.AddSporTakipData(connectionString);
+        // Açılıştaki şema güncellemesi; Data katmanı zaten kaydettiyse o kayıt kullanılır.
+        builder.Services.TryAddSingleton(_ => new SchemaMigrator(connectionString));
 
         builder.Services.AddTransient<Form1>();
         builder.Services.AddTransient<AntrenmanEkleForm>();
@@ -75,6 +120,7 @@ static class Program
         builder.Services.AddTransient<AntrenmanDuzenleForm>();
         builder.Services.AddTransient<TakipDuzenleForm>();
         builder.Services.AddTransient<OlcumGrafikForm>();
+        builder.Services.AddTransient<HaftalikProgramForm>();
 
         return builder.Build();
     }

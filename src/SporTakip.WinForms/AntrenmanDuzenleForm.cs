@@ -18,6 +18,7 @@ namespace SporTakip
         {
             _antrenmanService = antrenmanService;
             InitializeComponent();
+            GunComboHelper.Doldur(cmbGun);
             txtAntrenmanAdi.MaxLength = ValidationConstants.AntrenmanAdiMaxLength;
             if (components == null) components = new System.ComponentModel.Container();
             _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
@@ -43,9 +44,11 @@ namespace SporTakip
                 SporcuId = antrenman.SporcuId,
                 AntrenmanAdi = antrenman.AntrenmanAdi,
                 Detaylar = antrenman.Detaylar,
+                Gun = antrenman.Gun,
             };
             txtAntrenmanAdi.Text = antrenman.AntrenmanAdi ?? string.Empty;
             txtDetaylar.Text = antrenman.Detaylar ?? string.Empty;
+            GunComboHelper.Sec(cmbGun, antrenman.Gun);
         }
 
         private async void btnKaydet_Click(object sender, EventArgs e)
@@ -75,6 +78,7 @@ namespace SporTakip
                         SporcuId = _antrenman.SporcuId,
                         AntrenmanAdi = txtAntrenmanAdi.Text.Trim(),
                         Detaylar = txtDetaylar.Text.Trim(),
+                        Gun = GunComboHelper.SeciliGun(cmbGun),
                     };
                     var result = await _antrenmanService.GuncelleAsync(guncel, LifetimeToken);
                     // Form bu arada kapatıldıysa kontrollere dokunma, kapanmış form için mesaj gösterme.
@@ -83,6 +87,7 @@ namespace SporTakip
                         {
                             [nameof(Antrenman.AntrenmanAdi)] = txtAntrenmanAdi,
                             [nameof(Antrenman.Detaylar)] = txtDetaylar,
+                            [nameof(Antrenman.Gun)] = cmbGun,
                         }, this)) return;
                     DialogResult = DialogResult.OK;
                 }

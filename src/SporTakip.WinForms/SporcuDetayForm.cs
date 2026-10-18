@@ -261,6 +261,19 @@ namespace SporTakip
             DuzenlemePenceresiAc<OlcumGrafikForm>(frm => frm.Yukle(sporcu.Id, sporcu.Ad));
         }
 
+        private void btnHaftalikProgram_Click(object sender, EventArgs e)
+        {
+            if (IsClosedOrClosing) return;
+            Sporcu sporcu = SeciliSporcu();
+            if (sporcu == null)
+            {
+                MessageBox.Show(this, "Haftalık program için bir sporcu seçin.", "Seçim gerekli",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            DuzenlemePenceresiAc<HaftalikProgramForm>(frm => frm.Yukle(sporcu.Id, sporcu.Ad));
+        }
+
         private async void btnCsvAktar_Click(object sender, EventArgs e)
         {
             if (IsClosedOrClosing) return;

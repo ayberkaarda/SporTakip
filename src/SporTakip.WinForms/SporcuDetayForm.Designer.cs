@@ -45,6 +45,7 @@
             this.colOlcumler = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnGrafik = new System.Windows.Forms.Button();
             this.btnCsvAktar = new System.Windows.Forms.Button();
+            this.btnHaftalikProgram = new System.Windows.Forms.Button();
             this.btnAntrenmanDuzenle = new System.Windows.Forms.Button();
             this.btnAntrenmanSil = new System.Windows.Forms.Button();
             this.btnTakipDuzenle = new System.Windows.Forms.Button();
@@ -255,6 +256,23 @@
             this.btnCsvAktar.UseVisualStyleBackColor = false;
             this.btnCsvAktar.Click += new System.EventHandler(this.btnCsvAktar_Click);
             //
+            // btnHaftalikProgram
+            //
+            this.btnHaftalikProgram.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnHaftalikProgram.FlatAppearance.BorderSize = 0;
+            this.btnHaftalikProgram.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
+            this.btnHaftalikProgram.ForeColor = System.Drawing.Color.White;
+            this.btnHaftalikProgram.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHaftalikProgram.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHaftalikProgram.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnHaftalikProgram.Location = new System.Drawing.Point(293, 72);
+            this.btnHaftalikProgram.Name = "btnHaftalikProgram";
+            this.btnHaftalikProgram.Size = new System.Drawing.Size(186, 30);
+            this.btnHaftalikProgram.TabIndex = 16;
+            this.btnHaftalikProgram.Text = "Haftalık Program";
+            this.btnHaftalikProgram.UseVisualStyleBackColor = false;
+            this.btnHaftalikProgram.Click += new System.EventHandler(this.btnHaftalikProgram_Click);
+            //
             // btnAntrenmanDuzenle
             //
             this.btnAntrenmanDuzenle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
@@ -415,6 +433,7 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.btnkapat;
             this.ClientSize = new System.Drawing.Size(503, 450);
+            this.Controls.Add(this.btnHaftalikProgram);
             this.Controls.Add(this.btnCsvAktar);
             this.Controls.Add(this.btnGrafik);
             this.Controls.Add(this.lblBaslik);
@@ -459,6 +478,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colOlcumler;
         private System.Windows.Forms.Button btnGrafik;
         private System.Windows.Forms.Button btnCsvAktar;
+        private System.Windows.Forms.Button btnHaftalikProgram;
         private System.Windows.Forms.Button btnAntrenmanDuzenle;
         private System.Windows.Forms.Button btnAntrenmanSil;
         private System.Windows.Forms.Button btnTakipDuzenle;
