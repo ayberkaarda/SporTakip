@@ -4,19 +4,16 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
     /// <summary>
     /// Uygulamadaki tüm pencerelerin ortak tabanı: kenarlıksız, sabit boyutlu,
-    /// sürüklenebilir pencere ve ortak görsel stil tek yerde tanımlanır.
+    /// sürüklenebilir pencere. Renk ve yazı tipleri Theme klasöründeki token'lardan gelir.
     /// </summary>
     public class BorderlessForm : Form
     {
-        public static readonly Color AccentColor = Color.FromArgb(0, 41, 132);
-        public static readonly Color BorderColor = Color.FromArgb(0, 41, 132);
-        public static readonly Color CloseHoverColor = Color.FromArgb(232, 17, 35);
-
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HTCAPTION = 0x2;
         private const int WS_MINIMIZEBOX = 0x20000;
@@ -37,7 +34,8 @@ namespace SporTakip
             MaximizeBox = false;
             ControlBox = false;
             DoubleBuffered = true;
-            Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            // AutoScaleDimensions (7x17) bu gövde yazı tipine göre; tüm formlar aynı tabanı kullanır.
+            Font = ThemeTypography.Govde;
             _lifetimeToken = _lifetime.Token;
         }
 
@@ -95,9 +93,7 @@ namespace SporTakip
             }
         }
 
-        private static bool IsTitleButton(Button button) =>
-            string.Equals(button.Name, "btnkapat", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(button.Name, "btnAsagial", StringComparison.OrdinalIgnoreCase);
+        private static bool IsTitleButton(Button button) => ThemeApplier.BaslikDugmesiMi(button);
 
         /// <summary>İşlem form kapandığı için iptal edildiyse true; bu durumda hata gösterilmez.</summary>
         protected bool IsClosingCancellation(Exception exception) =>
@@ -160,7 +156,7 @@ namespace SporTakip
         {
             // Ölçekleme (DPI) uygulandıktan sonraki son boyutu kilitle.
             LockSize();
-            StyleTitleButtons();
+            ThemeApplier.Uygula(this);
             base.OnLoad(e);
         }
 
@@ -217,38 +213,80 @@ namespace SporTakip
             if (e.Button == MouseButtons.Left && e.Clicks == 1) BeginDrag();
         }
 
+        // ---- Kartlar: ilgili kontrolleri yüzey renginde, yuvarlatılmış bir zemin üzerinde gruplar ----
+
+        private readonly List<Control[]> _kartlar = new List<Control[]>();
+
+        /// <summary>
+        /// Verilen kontrollerin çevresine kart çizilir. Kart sınırı kontrollerin kapladığı alandan
+        /// hesaplanır; böylece DPI ölçeklemesinde kontrollerle birlikte büyür.
+        /// </summary>
+        protected void KartEkle(params Control[] icerik)
+        {
+            if (icerik == null || icerik.Length == 0) return;
+            _kartlar.Add(icerik);
+            Invalidate();
+        }
+
+        private Rectangle KartSiniri(Control[] icerik)
+        {
+            Rectangle sinir = Rectangle.Empty;
+            foreach (Control c in icerik)
+                sinir = sinir.IsEmpty ? c.Bounds : Rectangle.Union(sinir, c.Bounds);
+            int pay = LogicalToDeviceUnits(ThemeScale.AralikL);
+            sinir.Inflate(pay, pay);
+            return sinir;
+        }
+
+        /// <summary>Kontrol bir kartın içinde mi? (Sahibi-çizimli düğmelerin zemin rengi için.)</summary>
+        internal bool KartIcinde(Control c)
+        {
+            if (c.Parent != this) return false;
+            foreach (Control[] kart in _kartlar)
+                if (Array.IndexOf(kart, c) >= 0 || KartSiniri(kart).Contains(c.Bounds)) return true;
+            return false;
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            using (var pen = new Pen(BorderColor))
+            ThemePalette p = ThemeManager.Palet;
+            Graphics g = e.Graphics;
+            float r = LogicalToDeviceUnits(ThemeScale.KoseBuyuk);
+            int kayma = LogicalToDeviceUnits(ThemeScale.GolgeKayma);
+            int yayilim = LogicalToDeviceUnits(ThemeScale.GolgeYayilim);
+            foreach (Control[] kart in _kartlar)
             {
-                e.Graphics.DrawRectangle(pen, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
-            }
-        }
-
-        private void StyleTitleButtons()
-        {
-            foreach (Control control in Controls)
-            {
-                var button = control as Button;
-                if (button == null) continue;
-
-                if (!IsTitleButton(button)) continue;
-                bool isClose = string.Equals(button.Name, "btnkapat", StringComparison.OrdinalIgnoreCase);
-
-                button.TabStop = false;
-                button.Cursor = Cursors.Hand;
-                button.FlatStyle = FlatStyle.Flat;
-                button.FlatAppearance.BorderSize = 0;
-
-                if (isClose)
+                Rectangle sinir = KartSiniri(kart);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                // Yumuşak gölge: giderek saydamlaşan birkaç katman.
+                for (int i = yayilim; i >= 1; i--)
                 {
-                    Color restFore = button.ForeColor;
-                    button.FlatAppearance.MouseOverBackColor = CloseHoverColor;
-                    button.FlatAppearance.MouseDownBackColor = Color.FromArgb(200, 15, 30);
-                    button.MouseEnter += (s, ev) => button.ForeColor = Color.White;
-                    button.MouseLeave += (s, ev) => button.ForeColor = restFore;
+                    var golge = new RectangleF(sinir.X - i + 1, sinir.Y - i + 1 + kayma, sinir.Width + (i - 1) * 2, sinir.Height + (i - 1) * 2);
+                    using var yolGolge = ThemeApplier.Yuvarlak(golge, r + i);
+                    using var fircaGolge = new SolidBrush(Color.FromArgb(p.Shadow.A / (i + 1), p.Shadow));
+                    g.FillPath(fircaGolge, yolGolge);
                 }
+                using (var yol = ThemeApplier.Yuvarlak(new RectangleF(sinir.X + 0.5f, sinir.Y + 0.5f, sinir.Width - 1, sinir.Height - 1), r))
+                {
+                    using (var dolgu = new SolidBrush(p.Surface)) g.FillPath(dolgu, yol);
+                    using (var kalem = new Pen(p.Border)) g.DrawPath(kalem, yol);
+                }
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            }
+            // Kenarlığı kapatılan liste ve tabloların çerçevesi token rengiyle çizilir.
+            using (var cerceve = new Pen(p.Border))
+            {
+                foreach (Control c in Controls)
+                {
+                    bool cerceveli = c.Visible && ((c is ListBox lb && lb.BorderStyle == BorderStyle.None)
+                        || (c is DataGridView dgv && dgv.BorderStyle == BorderStyle.None));
+                    if (cerceveli) g.DrawRectangle(cerceve, c.Left - 1, c.Top - 1, c.Width + 1, c.Height + 1);
+                }
+            }
+            using (var pen = new Pen(p.BorderStrong))
+            {
+                g.DrawRectangle(pen, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
             }
         }
     }

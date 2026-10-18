@@ -6,29 +6,28 @@ using System.Windows.Forms;
 using ScottPlot;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Domain;
+using SporTakip.Theme;
 using PlotColor = ScottPlot.Color;
 
 namespace SporTakip
 {
     /// <summary>Bir sporcunun seçilen ölçüm türündeki değerlerini tarihe göre çizgi grafikte gösterir.</summary>
-    public partial class OlcumGrafikForm : BorderlessForm
+    public partial class OlcumGrafikForm : BorderlessForm, IThemeAware
     {
-        // Koyu lacivert tema; form arka planı ve boş durum etiketiyle aynı tonlar.
-        private static readonly PlotColor FigurArkaPlan = PlotColor.FromHex("#081640");
-        private static readonly PlotColor VeriArkaPlan = PlotColor.FromHex("#0E2258");
-        private static readonly PlotColor EksenRengi = PlotColor.FromHex("#AABCE4");
-        private static readonly PlotColor CizgiRengi = PlotColor.FromHex("#F07A28");
-
         private readonly IOlcumService _olcumService;
         private int _sporcuId;
         private int _grafikIstegi;
         private AxisLimits? _cizimSinirlari;
+        private ScottPlot.Plottables.Scatter _cizgi;
 
         public OlcumGrafikForm(IOlcumService olcumService)
         {
             _olcumService = olcumService;
             InitializeComponent();
-            GrafikTemasiniUygula();
+            ThemeApplier.Rol(KontrolRolu.IkincilMetin, lblSporcu, lblOzet);
+            ThemeApplier.Rol(lblBos, KontrolRolu.BosDurum);
+            GrafikTemasiniUygula(ThemeManager.Palet);
+            KartEkle(formsPlot, lblBos);
             // ScottPlot'un İngilizce sağ tık menüsü yerine tek Türkçe komut: yakınlaştırma/kaydırmayı geri al.
             formsPlot.Menu?.Clear();
             formsPlot.Menu?.Add("Görünümü sıfırla", plot =>
@@ -45,22 +44,40 @@ namespace SporTakip
             lblSporcu.Text = string.IsNullOrWhiteSpace(sporcuAdi) ? string.Empty : "— " + sporcuAdi;
         }
 
-        private void GrafikTemasiniUygula()
+        /// <summary>Tema değişince grafik de yeniden boyanır.</summary>
+        public void TemaUygula(ThemePalette palet)
+        {
+            GrafikTemasiniUygula(palet);
+            formsPlot.Refresh();
+        }
+
+        private static PlotColor Renk(System.Drawing.Color c) => new PlotColor(c.R, c.G, c.B, c.A);
+
+        private void GrafikTemasiniUygula(ThemePalette p)
         {
             Plot plot = formsPlot.Plot;
-            plot.FigureBackground.Color = FigurArkaPlan;
-            plot.DataBackground.Color = VeriArkaPlan;
-            plot.Grid.MajorLineColor = PlotColor.FromHex("#FFFFFF").WithOpacity(0.08);
-            plot.Font.Set("Segoe UI");
+            plot.FigureBackground.Color = Renk(p.Surface);
+            plot.DataBackground.Color = Renk(p.Surface);
+            plot.Grid.MajorLineColor = Renk(p.Border);
+            plot.Font.Set(ThemeTypography.Aile);
             EksenleriBoya(plot);
+            if (_cizgi != null) CizgiyiBoya(_cizgi, p);
+        }
+
+        private static void CizgiyiBoya(ScottPlot.Plottables.Scatter cizgi, ThemePalette p)
+        {
+            cizgi.Color = Renk(p.Accent);
+            cizgi.MarkerFillColor = Renk(p.Accent);
+            cizgi.MarkerLineColor = Renk(p.Surface);
         }
 
         /// <summary>Eksen yazı/çizgi renkleri; alt eksen tarih eksenine çevrilince yeniden uygulanmalı.</summary>
         private static void EksenleriBoya(Plot plot)
         {
-            plot.Axes.Color(EksenRengi);
+            ThemePalette p = ThemeManager.Palet;
+            plot.Axes.Color(Renk(p.TextSecondary));
             foreach (var eksen in plot.Axes.GetAxes())
-                eksen.FrameLineStyle.Color = PlotColor.FromHex("#FFFFFF").WithOpacity(0.15);
+                eksen.FrameLineStyle.Color = Renk(p.Border);
         }
 
         private async void OlcumGrafikForm_Load(object sender, EventArgs e)
@@ -119,7 +136,8 @@ namespace SporTakip
             double[] xs = sirali.Select(k => k.Tarih.ToOADate()).ToArray();
             double[] ys = sirali.Select(k => (double)k.Deger).ToArray();
             var cizgi = plot.Add.Scatter(xs, ys);
-            cizgi.Color = CizgiRengi;
+            _cizgi = cizgi;
+            CizgiyiBoya(cizgi, ThemeManager.Palet);
             cizgi.LineWidth = 2.5f;
             cizgi.MarkerSize = 8;
             cizgi.MarkerShape = MarkerShape.FilledCircle;

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using SporTakip.Application.Abstractions.Services;
 using SporTakip.Domain;
+using SporTakip.Theme;
 
 namespace SporTakip
 {
@@ -30,6 +31,67 @@ namespace SporTakip
             // Arama kutusundayken Enter yeni sporcu kaydetmesin; aramayı hemen çalıştırsın.
             txtAra.Enter += (s, e) => AcceptButton = null;
             txtAra.Leave += (s, e) => AcceptButton = btnKaydet;
+            // Sekme sırası soldan sağa (arama, liste, işlemler, yeni sporcu); açılışta imleç yine ad kutusunda olsun.
+            ActiveControl = txtAd;
+
+            ThemeApplier.HataSaglayici(_errors);
+            ThemeApplier.Rol(KontrolRolu.Bolum, lblSporcular, lblYeniSporcu);
+            ThemeApplier.Rol(btnSil, KontrolRolu.Tehlike);
+            ThemeApplier.Rol(btnTema, KontrolRolu.PencereDugmesi);
+            KartEkle(lblSporcular, txtAra, lstSporcular, btnDuzenle, btnSil);
+            KartEkle(lblYeniSporcu, label1, txtAd, label2, txtSporDali, btnKaydet);
+            KartEkle(btnAntrenmanEkle, btnTakipEkle, btnSporcuDetay);
+            TemaMenusunuHazirla();
+        }
+
+        private ContextMenuStrip _temaMenu;
+        private ToolTip _ipucu;
+
+        private void TemaMenusunuHazirla()
+        {
+            _ipucu = new ToolTip(components);
+            _temaMenu = new ContextMenuStrip(components) { ShowImageMargin = false, ShowCheckMargin = true };
+            void Ekle(string metin, TemaModu mod)
+            {
+                var item = new ToolStripMenuItem(metin) { Tag = mod };
+                item.Click += (s, e) => ThemeManager.Degistir(mod);
+                _temaMenu.Items.Add(item);
+            }
+            Ekle("Sistem teması", TemaModu.Sistem);
+            Ekle("Açık", TemaModu.Acik);
+            Ekle("Koyu", TemaModu.Koyu);
+            ThemeManager.Degisti += ThemeManager_Degisti;
+            TemaDugmesiniGuncelle();
+        }
+
+        private void ThemeManager_Degisti(object sender, EventArgs e)
+        {
+            if (IsDisposed) return;
+            TemaDugmesiniGuncelle();
+        }
+
+        private void TemaDugmesiniGuncelle()
+        {
+            ThemePalette palet = ThemeManager.Palet;
+            // Segoe MDL2 Assets: E706 güneş (açık), E708 ay (koyu).
+            btnTema.Text = palet.Koyu ? "" : "";
+            string mod = ThemeManager.Mod == TemaModu.Sistem ? " (Windows ayarını izliyor)" : string.Empty;
+            _ipucu.SetToolTip(btnTema, "Tema: " + palet.Ad + mod);
+            foreach (ToolStripMenuItem item in _temaMenu.Items)
+                item.Checked = Equals(item.Tag, ThemeManager.Mod);
+            ThemeApplier.MenuBoya(_temaMenu);
+            btnTema.Invalidate();
+        }
+
+        private void btnTema_Click(object sender, EventArgs e)
+        {
+            _temaMenu.Show(btnTema, new System.Drawing.Point(btnTema.Width, btnTema.Height), ToolStripDropDownDirection.BelowLeft);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            ThemeManager.Degisti -= ThemeManager_Degisti;
+            base.OnFormClosed(e);
         }
 
         /// <summary>Listede "Id - Ad - SporDali" biçiminde gösterilen satır.</summary>

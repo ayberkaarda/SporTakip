@@ -41,9 +41,6 @@ namespace SporTakip
             // lblBaslik
             //
             this.lblBaslik.AutoSize = true;
-            this.lblBaslik.BackColor = System.Drawing.Color.Transparent;
-            this.lblBaslik.Font = new System.Drawing.Font("Segoe UI Semibold", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblBaslik.ForeColor = System.Drawing.Color.White;
             this.lblBaslik.Location = new System.Drawing.Point(18, 14);
             this.lblBaslik.Name = "lblBaslik";
             this.lblBaslik.Size = new System.Drawing.Size(132, 25);
@@ -53,8 +50,6 @@ namespace SporTakip
             // lblSporcu
             //
             this.lblSporcu.AutoEllipsis = true;
-            this.lblSporcu.BackColor = System.Drawing.Color.Transparent;
-            this.lblSporcu.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(188)))), ((int)(((byte)(228)))));
             this.lblSporcu.Location = new System.Drawing.Point(160, 19);
             this.lblSporcu.Name = "lblSporcu";
             this.lblSporcu.Size = new System.Drawing.Size(420, 20);
@@ -63,9 +58,6 @@ namespace SporTakip
             //
             // lblTur
             //
-            this.lblTur.BackColor = System.Drawing.Color.Transparent;
-            this.lblTur.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblTur.ForeColor = System.Drawing.Color.White;
             this.lblTur.Location = new System.Drawing.Point(20, 60);
             this.lblTur.Name = "lblTur";
             this.lblTur.Size = new System.Drawing.Size(86, 25);
@@ -85,8 +77,6 @@ namespace SporTakip
             //
             // lblOzet
             //
-            this.lblOzet.BackColor = System.Drawing.Color.Transparent;
-            this.lblOzet.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(188)))), ((int)(((byte)(228)))));
             this.lblOzet.Location = new System.Drawing.Point(330, 60);
             this.lblOzet.Name = "lblOzet";
             this.lblOzet.Size = new System.Drawing.Size(410, 25);
@@ -95,19 +85,16 @@ namespace SporTakip
             //
             // formsPlot
             //
-            this.formsPlot.Location = new System.Drawing.Point(20, 100);
+            this.formsPlot.Location = new System.Drawing.Point(36, 116);
             this.formsPlot.Name = "formsPlot";
-            this.formsPlot.Size = new System.Drawing.Size(720, 360);
+            this.formsPlot.Size = new System.Drawing.Size(688, 328);
             this.formsPlot.TabIndex = 1;
             //
             // lblBos
             //
-            this.lblBos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(34)))), ((int)(((byte)(88)))));
-            this.lblBos.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblBos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(188)))), ((int)(((byte)(228)))));
-            this.lblBos.Location = new System.Drawing.Point(20, 100);
+            this.lblBos.Location = new System.Drawing.Point(36, 116);
             this.lblBos.Name = "lblBos";
-            this.lblBos.Size = new System.Drawing.Size(720, 360);
+            this.lblBos.Size = new System.Drawing.Size(688, 328);
             this.lblBos.TabIndex = 2;
             this.lblBos.Text = "Bu tür için ölçüm yok";
             this.lblBos.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -115,26 +102,18 @@ namespace SporTakip
             //
             // btnkapat
             //
-            this.btnkapat.BackColor = System.Drawing.Color.Transparent;
             this.btnkapat.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnkapat.FlatAppearance.BorderSize = 0;
-            this.btnkapat.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(17)))), ((int)(((byte)(35)))));
-            this.btnkapat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnkapat.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.btnkapat.ForeColor = System.Drawing.Color.White;
             this.btnkapat.Location = new System.Drawing.Point(714, 0);
             this.btnkapat.Name = "btnkapat";
             this.btnkapat.Size = new System.Drawing.Size(46, 32);
             this.btnkapat.TabIndex = 3;
             this.btnkapat.TabStop = false;
             this.btnkapat.Text = "×";
-            this.btnkapat.UseVisualStyleBackColor = false;
             //
             // OlcumGrafikForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(8)))), ((int)(((byte)(22)))), ((int)(((byte)(64)))));
             this.CancelButton = this.btnkapat;
             this.ClientSize = new System.Drawing.Size(760, 480);
             this.Controls.Add(this.lblBos);
@@ -145,7 +124,6 @@ namespace SporTakip
             this.Controls.Add(this.lblSporcu);
             this.Controls.Add(this.lblBaslik);
             this.Controls.Add(this.btnkapat);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

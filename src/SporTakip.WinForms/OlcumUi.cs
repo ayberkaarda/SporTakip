@@ -87,10 +87,9 @@ namespace SporTakip
             combo.Items.AddRange(OnerilenBirimler.Cast<object>().ToArray());
         }
 
-        /// <summary>Küçük ölçüm listesini SporcuDetayForm tablolarıyla aynı görünüme getirir ve sütunları ekler.</summary>
+        /// <summary>Küçük ölçüm listesini SporcuDetayForm tablolarıyla aynı davranışa getirir ve sütunları ekler; renkleri ThemeApplier verir.</summary>
         internal static void GridHazirla(DataGridView grid)
         {
-            Color accent = BorderlessForm.AccentColor;
             grid.AutoGenerateColumns = false;
             grid.AllowUserToAddRows = false;
             grid.AllowUserToDeleteRows = false;
@@ -101,31 +100,19 @@ namespace SporTakip
             grid.StandardTab = true;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            grid.BackgroundColor = Color.White;
-            grid.BorderStyle = BorderStyle.FixedSingle;
             grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             grid.EnableHeadersVisualStyles = false;
-            grid.GridColor = Color.FromArgb(225, 232, 246);
             grid.ColumnHeadersHeight = 26;
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             grid.RowTemplate.Height = 22;
             grid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 Alignment = DataGridViewContentAlignment.MiddleLeft,
-                BackColor = accent,
-                ForeColor = Color.White,
-                SelectionBackColor = accent,
-                SelectionForeColor = Color.White,
-                Font = new Font("Segoe UI Semibold", 9F, FontStyle.Regular, GraphicsUnit.Point),
                 WrapMode = DataGridViewTriState.False,
             };
             grid.DefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = Color.White,
-                ForeColor = Color.FromArgb(33, 37, 41),
-                SelectionBackColor = Color.FromArgb(22, 72, 170),
-                SelectionForeColor = Color.White,
                 WrapMode = DataGridViewTriState.False,
             };
             grid.Columns.Clear();
