@@ -38,7 +38,7 @@ public sealed class LegacySchemaMigrationTests
             var migrator = new SchemaMigrator(builder.ConnectionString);
             await using var connection = new SqlConnection(builder.ConnectionString);
             await connection.OpenAsync();
-            // Original 001 structure, except Ad is also nullable to represent restored legacy databases.
+            // 001 structure (Ad nullable as in SporTakip.bak), with an older DATETIME Tarih variant.
             // No script reader or GO splitter: only the production migrator executes migrations.
             await connection.ExecuteAsync("""
                 CREATE TABLE dbo.Sporcular (
