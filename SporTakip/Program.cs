@@ -7,10 +7,15 @@ static class Program
     [STAThread]
     static void Main()
     {
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+        Application.ThreadException += (sender, e) => ErrorHandler.Show(e.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            ErrorHandler.Show(e.ExceptionObject as Exception ?? new Exception("Bilinmeyen uygulama hatası."));
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // Ana formunu burada başlat (örnek: MainForm)
+
         Application.Run(new Form1());
     }
 }
+

@@ -1,56 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
 namespace SporTakip
 {
-    public partial class TakipEkleForm : Form
+    public partial class TakipEkleForm : BorderlessForm
     {
+        private bool _isLoading;
+        private readonly ErrorProvider _errors;
+
         public TakipEkleForm()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MaximumSize = this.Size;
-            this.MinimumSize = this.Size;
+            if (components == null) components = new System.ComponentModel.Container();
+            _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
         }
 
         private void TakipEkleForm_Load(object sender, EventArgs e)
         {
-            var dt = DatabaseHelper.ExecuteQuery("SELECT * FROM Sporcular");
-            cmbSporcular.DataSource = dt;
-            cmbSporcular.DisplayMember = "Ad";
-            cmbSporcular.ValueMember = "Id";
-            this.FormBorderStyle = FormBorderStyle.None;
+            _isLoading = true;
+            try
+            {
+                cmbSporcular.DisplayMember = "Ad";
+                cmbSporcular.ValueMember = "Id";
+                cmbSporcular.DataSource = DatabaseHelper.ExecuteQuery("SELECT Id, Ad FROM Sporcular");
+            }
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
+            finally { _isLoading = false; }
 
-            // Çıkış ve diğer düğmeleri gizle
-            this.ControlBox = false;
-            this.MaximizeBox = false; // Maksimize butonunu gizle
-            this.MinimizeBox = false; // Minimize butonunu gizle
         }
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
-            if (cmbSporcular.SelectedValue == null) return;
-
-            int sporcuId = Convert.ToInt32(cmbSporcular.SelectedValue);
-            string tarih = dtTarih.Value.ToString("yyyy-MM-dd");
-            string aciklama = txtAciklama.Text;
-
-            string query = "INSERT INTO Takipler (SporcuId, Tarih, Aciklama) VALUES (@sid, @tarih, @aciklama)";
-            DatabaseHelper.ExecuteNonQuery(query,
-                new SqlParameter("@sid", sporcuId),
-                new SqlParameter("@tarih", tarih),
-                new SqlParameter("@aciklama", aciklama));
-
-            MessageBox.Show("Takip kaydettin Tebriklerr!");
+            if (_isLoading) return;
+            _errors.Clear();
+            bool valid = true;
+            if (!(cmbSporcular.SelectedValue is int))
+            {
+                _errors.SetError(cmbSporcular, "Lütfen bir sporcu seçin.");
+                valid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtAciklama.Text))
+            {
+                _errors.SetError(txtAciklama, "Lütfen takip açıklamasını girin.");
+                valid = false;
+            }
+            if (!valid) return;
+            try
+            {
+                DatabaseHelper.ExecuteNonQuery(
+                    "INSERT INTO Takipler (SporcuId, Tarih, Aciklama) VALUES (@sid, @tarih, @aciklama)",
+                    new SqlParameter("@sid", (int)cmbSporcular.SelectedValue),
+                    new SqlParameter("@tarih", SqlDbType.Date) { Value = dtTarih.Value.Date },
+                    new SqlParameter("@aciklama", txtAciklama.Text.Trim()));
+                MessageBox.Show("Takip kaydı eklendi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtAciklama.Clear();
+                dtTarih.Value = DateTime.Today;
+                txtAciklama.Focus();
+            }
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
         private void btnkapat_Click(object sender, EventArgs e)
@@ -64,3 +73,4 @@ namespace SporTakip
         }
     }
 }
+

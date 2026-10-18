@@ -1,96 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SporTakip
 {
-    public partial class Form1 : Form
+    public partial class Form1 : BorderlessForm
     {
         public Form1()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MaximumSize = this.Size;
-            this.MinimumSize = this.Size;
         }
 
         private void ListeleSporcular()
         {
-            lstSporcular.Items.Clear();
-
-            string query = "SELECT Id, Ad, SporDali FROM Sporcular";
-            DataTable dt = DatabaseHelper.ExecuteQuery(query);
-
-            foreach (DataRow row in dt.Rows)
+            try
             {
-                int id = Convert.ToInt32(row["Id"]);
-                string ad = row["Ad"].ToString();
-                string sporDali = row["SporDali"].ToString();
-
-                lstSporcular.Items.Add($"{id} - {ad} - {sporDali}");
+                DataTable dt = DatabaseHelper.ExecuteQuery("SELECT Id, Ad, SporDali FROM Sporcular");
+                dt.Columns.Add("Gorunum", typeof(string));
+                foreach (DataRow row in dt.Rows)
+                    row["Gorunum"] = string.Format("{0} - {1} - {2}", row["Id"], row["Ad"], row["SporDali"]);
+                lstSporcular.DisplayMember = "Gorunum";
+                lstSporcular.ValueMember = "Id";
+                lstSporcular.DataSource = dt;
             }
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            ListeleSporcular();
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
-            string ad = txtAd.Text;
-            string sporDali = txtSporDali.Text;
-
+            string ad = txtAd.Text.Trim();
+            string sporDali = txtSporDali.Text.Trim();
             if (string.IsNullOrWhiteSpace(ad) || string.IsNullOrWhiteSpace(sporDali))
             {
-                MessageBox.Show("alanlar boş olmaz.");
+                MessageBox.Show("Lütfen sporcu adını ve spor dalını girin.", "Eksik bilgi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            string query = "INSERT INTO Sporcular (Ad, SporDali) VALUES (@ad, @sporDali)";
-            DatabaseHelper.ExecuteNonQuery(query,
-                new SqlParameter("@ad", ad),
-                new SqlParameter("@sporDali", sporDali));
-
-            MessageBox.Show("Sporcu sisteme kaydedildi");
-            txtAd.Text = "";
-            txtSporDali.Text = "";
-            ListeleSporcular();
+            try
+            {
+                DatabaseHelper.ExecuteNonQuery("INSERT INTO Sporcular (Ad, SporDali) VALUES (@ad, @sporDali)",
+                    new SqlParameter("@ad", ad), new SqlParameter("@sporDali", sporDali));
+                MessageBox.Show("Sporcu kaydedildi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtAd.Clear();
+                txtSporDali.Clear();
+                txtAd.Focus();
+                ListeleSporcular();
+            }
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
         private void btnAntrenmanEkle_Click(object sender, EventArgs e)
         {
-            new AntrenmanEkleForm().ShowDialog();
+            using (var frm = new AntrenmanEkleForm()) { frm.ShowDialog(this); }
         }
 
         private void btnTakipEkle_Click(object sender, EventArgs e)
         {
-            new TakipEkleForm().ShowDialog();
+            using (var frm = new TakipEkleForm()) { frm.ShowDialog(this); }
         }
 
         private void btnSporcuDetay_Click(object sender, EventArgs e)
         {
-            new SporcuDetayForm().ShowDialog();
+            using (var frm = new SporcuDetayForm()) { frm.ShowDialog(this); }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             ListeleSporcular();
-            this.FormBorderStyle = FormBorderStyle.None;
 
-            // Çıkış ve diğer düğmeleri gizle
-            this.ControlBox = false;
-            this.MaximizeBox = false; // Maksimize butonunu gizle
-            this.MinimizeBox = false; // Minimize butonunu gizle
         }
 
         private void txtAd_Enter(object sender, EventArgs e)
@@ -105,39 +83,26 @@ namespace SporTakip
 
         private void btnSil_Click(object sender, EventArgs e)
         {
-            var selectedItem = lstSporcular.SelectedItem;
-
-            if (selectedItem == null)
+            var selected = lstSporcular.SelectedItem as DataRowView;
+            if (selected == null)
             {
-                MessageBox.Show("Silmek için bir sporcu seçin.");
+                MessageBox.Show("Silmek için bir sporcu seçin.", "Seçim gerekli",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            string selectedText = selectedItem.ToString();
-            string[] parts = selectedText.Split(new[] { " - " }, StringSplitOptions.None);
-
-            if (parts.Length < 3)
+            int id = Convert.ToInt32(selected["Id"]);
+            string ad = Convert.ToString(selected["Ad"]);
+            if (MessageBox.Show(string.Format("\"{0}\" ve ona ait tüm antrenman ve takip kayıtları silinecek. Devam edilsin mi?", ad),
+                "Silme onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2) != DialogResult.Yes) return;
+            try
             {
-                MessageBox.Show("Geçersiz veri formatı.");
-                return;
+                DatabaseHelper.DeleteSporcu(id);
+                MessageBox.Show("Sporcu ve tüm ilişkili kayıtlar silindi.", "Bilgi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ListeleSporcular();
             }
-
-            int id = Convert.ToInt32(parts[0]);
-
-            // Önce Takipler tablosundaki kayıtları sil
-            string deleteTakipler = "DELETE FROM Takipler WHERE SporcuId = @id";
-            DatabaseHelper.ExecuteNonQuery(deleteTakipler, new SqlParameter("@id", id));
-
-            // Sonra Antrenmanlar tablosundaki kayıtları sil
-            string deleteAntrenmanlar = "DELETE FROM Antrenmanlar WHERE SporcuId = @id";
-            DatabaseHelper.ExecuteNonQuery(deleteAntrenmanlar, new SqlParameter("@id", id));
-
-            // En son sporcuyu sil
-            string deleteSporcu = "DELETE FROM Sporcular WHERE Id = @id";
-            DatabaseHelper.ExecuteNonQuery(deleteSporcu, new SqlParameter("@id", id));
-
-            MessageBox.Show("Sporcu ve tüm ilişkili kayıtlar silindi.");
-            ListeleSporcular();
+            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
         private void btnkapat_Click(object sender, EventArgs e)
@@ -151,3 +116,4 @@ namespace SporTakip
         }
     }
 }
+
