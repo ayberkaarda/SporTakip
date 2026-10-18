@@ -53,10 +53,27 @@ namespace SporTakip
         protected override void OnLoad(EventArgs e)
         {
             // Ölçekleme (DPI) uygulandıktan sonraki son boyutu kilitle.
-            MinimumSize = Size;
-            MaximumSize = Size;
+            LockSize();
             StyleTitleButtons();
             base.OnLoad(e);
+        }
+
+        protected override void OnDpiChanged(DpiChangedEventArgs e)
+        {
+            // PerMonitorV2: pencere farklı DPI'lı bir ekrana taşındığında WinForms
+            // formu yeniden ölçekler. Kilitli boyut buna engel olmasın; ölçekleme
+            // bittikten sonra yeni boyutu tekrar kilitle.
+            MinimumSize = Size.Empty;
+            MaximumSize = Size.Empty;
+            base.OnDpiChanged(e);
+            LockSize();
+            Invalidate();
+        }
+
+        private void LockSize()
+        {
+            MinimumSize = Size;
+            MaximumSize = Size;
         }
 
         /// <summary>Pencereyi fareyle sürükler (B10).</summary>
