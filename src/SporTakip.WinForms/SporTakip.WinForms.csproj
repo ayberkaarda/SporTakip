@@ -59,4 +59,11 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
   </ItemGroup>
 
+  <!-- Bağımlılık yönü: WinForms -> Application -> Domain. Data yalnızca composition root (Program.cs) için. -->
+  <ItemGroup>
+    <ProjectReference Include="..\SporTakip.Domain\SporTakip.Domain.csproj" />
+    <ProjectReference Include="..\SporTakip.Application\SporTakip.Application.csproj" />
+    <ProjectReference Include="..\SporTakip.Data\SporTakip.Data.csproj" />
+  </ItemGroup>
+
 </Project>
