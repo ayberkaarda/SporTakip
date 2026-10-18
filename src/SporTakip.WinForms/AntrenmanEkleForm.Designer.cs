@@ -32,6 +32,8 @@
             this.comboSporcular = new System.Windows.Forms.ComboBox();
             this.txtAntrenmanName = new System.Windows.Forms.TextBox();
             this.txtDetaylar = new System.Windows.Forms.TextBox();
+            this.cmbGun = new System.Windows.Forms.ComboBox();
+            this.lblGun = new System.Windows.Forms.Label();
             this.btnKaydet = new System.Windows.Forms.Button();
             this.btnkapat = new System.Windows.Forms.Button();
             this.btnAsagial = new System.Windows.Forms.Button();
@@ -64,6 +66,27 @@
             this.txtDetaylar.Size = new System.Drawing.Size(190, 25);
             this.txtDetaylar.TabIndex = 2;
             //
+            // cmbGun
+            //
+            this.cmbGun.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGun.FormattingEnabled = true;
+            this.cmbGun.Location = new System.Drawing.Point(260, 215);
+            this.cmbGun.Name = "cmbGun";
+            this.cmbGun.Size = new System.Drawing.Size(190, 25);
+            this.cmbGun.TabIndex = 3;
+            //
+            // lblGun
+            //
+            this.lblGun.BackColor = System.Drawing.Color.Transparent;
+            this.lblGun.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblGun.ForeColor = System.Drawing.Color.White;
+            this.lblGun.Location = new System.Drawing.Point(120, 215);
+            this.lblGun.Name = "lblGun";
+            this.lblGun.Size = new System.Drawing.Size(130, 25);
+            this.lblGun.TabIndex = 10;
+            this.lblGun.Text = "Gün";
+            this.lblGun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
             // btnKaydet
             //
             this.btnKaydet.BackColor = System.Drawing.Color.White;
@@ -73,10 +96,10 @@
             this.btnKaydet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnKaydet.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnKaydet.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
-            this.btnKaydet.Location = new System.Drawing.Point(260, 222);
+            this.btnKaydet.Location = new System.Drawing.Point(260, 262);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(190, 36);
-            this.btnKaydet.TabIndex = 3;
+            this.btnKaydet.TabIndex = 4;
             this.btnKaydet.Text = "Kaydet";
             this.btnKaydet.UseVisualStyleBackColor = false;
             this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
@@ -92,7 +115,7 @@
             this.btnkapat.Location = new System.Drawing.Point(441, 0);
             this.btnkapat.Name = "btnkapat";
             this.btnkapat.Size = new System.Drawing.Size(46, 32);
-            this.btnkapat.TabIndex = 5;
+            this.btnkapat.TabIndex = 6;
             this.btnkapat.TabStop = false;
             this.btnkapat.Text = "×";
             this.btnkapat.UseVisualStyleBackColor = false;
@@ -109,7 +132,7 @@
             this.btnAsagial.Location = new System.Drawing.Point(395, 0);
             this.btnAsagial.Name = "btnAsagial";
             this.btnAsagial.Size = new System.Drawing.Size(46, 32);
-            this.btnAsagial.TabIndex = 4;
+            this.btnAsagial.TabIndex = 5;
             this.btnAsagial.TabStop = false;
             this.btnAsagial.Text = "–";
             this.btnAsagial.UseVisualStyleBackColor = false;
@@ -172,7 +195,7 @@
             this.BackgroundImage = global::SporTakip.Properties.Resources.footerbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.btnkapat;
-            this.ClientSize = new System.Drawing.Size(487, 309);
+            this.ClientSize = new System.Drawing.Size(487, 349);
             this.Controls.Add(this.lblBaslik);
             this.Controls.Add(this.lblSporcu);
             this.Controls.Add(this.label2);
@@ -180,6 +203,8 @@
             this.Controls.Add(this.btnkapat);
             this.Controls.Add(this.btnAsagial);
             this.Controls.Add(this.btnKaydet);
+            this.Controls.Add(this.lblGun);
+            this.Controls.Add(this.cmbGun);
             this.Controls.Add(this.txtDetaylar);
             this.Controls.Add(this.txtAntrenmanName);
             this.Controls.Add(this.comboSporcular);
@@ -201,6 +226,8 @@
         private System.Windows.Forms.ComboBox comboSporcular;
         private System.Windows.Forms.TextBox txtAntrenmanName;
         private System.Windows.Forms.TextBox txtDetaylar;
+        private System.Windows.Forms.ComboBox cmbGun;
+        private System.Windows.Forms.Label lblGun;
         private System.Windows.Forms.Button btnKaydet;
         private System.Windows.Forms.Button btnkapat;
         private System.Windows.Forms.Button btnAsagial;

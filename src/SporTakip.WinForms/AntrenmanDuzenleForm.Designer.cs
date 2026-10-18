@@ -32,6 +32,8 @@
             this.lblAntrenmanAdi = new System.Windows.Forms.Label();
             this.txtDetaylar = new System.Windows.Forms.TextBox();
             this.lblDetaylar = new System.Windows.Forms.Label();
+            this.cmbGun = new System.Windows.Forms.ComboBox();
+            this.lblGun = new System.Windows.Forms.Label();
             this.btnKaydet = new System.Windows.Forms.Button();
             this.btnIptal = new System.Windows.Forms.Button();
             this.btnkapat = new System.Windows.Forms.Button();
@@ -55,6 +57,27 @@
             this.txtDetaylar.Size = new System.Drawing.Size(300, 70);
             this.txtDetaylar.TabIndex = 1;
             //
+            // cmbGun
+            //
+            this.cmbGun.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGun.FormattingEnabled = true;
+            this.cmbGun.Location = new System.Drawing.Point(136, 172);
+            this.cmbGun.Name = "cmbGun";
+            this.cmbGun.Size = new System.Drawing.Size(300, 25);
+            this.cmbGun.TabIndex = 2;
+            //
+            // lblGun
+            //
+            this.lblGun.BackColor = System.Drawing.Color.Transparent;
+            this.lblGun.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblGun.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.lblGun.Location = new System.Drawing.Point(20, 172);
+            this.lblGun.Name = "lblGun";
+            this.lblGun.Size = new System.Drawing.Size(110, 25);
+            this.lblGun.TabIndex = 8;
+            this.lblGun.Text = "Gün";
+            this.lblGun.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
             // btnKaydet
             //
             this.btnKaydet.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
@@ -64,10 +87,10 @@
             this.btnKaydet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnKaydet.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnKaydet.ForeColor = System.Drawing.Color.White;
-            this.btnKaydet.Location = new System.Drawing.Point(136, 176);
+            this.btnKaydet.Location = new System.Drawing.Point(136, 212);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(145, 36);
-            this.btnKaydet.TabIndex = 2;
+            this.btnKaydet.TabIndex = 3;
             this.btnKaydet.Text = "Kaydet";
             this.btnKaydet.UseVisualStyleBackColor = false;
             this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
@@ -82,10 +105,10 @@
             this.btnIptal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnIptal.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnIptal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
-            this.btnIptal.Location = new System.Drawing.Point(291, 176);
+            this.btnIptal.Location = new System.Drawing.Point(291, 212);
             this.btnIptal.Name = "btnIptal";
             this.btnIptal.Size = new System.Drawing.Size(145, 36);
-            this.btnIptal.TabIndex = 3;
+            this.btnIptal.TabIndex = 4;
             this.btnIptal.Text = "İptal";
             this.btnIptal.UseVisualStyleBackColor = false;
             //
@@ -100,7 +123,7 @@
             this.btnkapat.Location = new System.Drawing.Point(424, 0);
             this.btnkapat.Name = "btnkapat";
             this.btnkapat.Size = new System.Drawing.Size(46, 32);
-            this.btnkapat.TabIndex = 4;
+            this.btnkapat.TabIndex = 5;
             this.btnkapat.TabStop = false;
             this.btnkapat.Text = "×";
             this.btnkapat.UseVisualStyleBackColor = false;
@@ -151,11 +174,13 @@
             this.BackgroundImage = global::SporTakip.Properties.Resources.background;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.btnIptal;
-            this.ClientSize = new System.Drawing.Size(470, 232);
+            this.ClientSize = new System.Drawing.Size(470, 268);
             this.Controls.Add(this.lblBaslik);
             this.Controls.Add(this.btnkapat);
             this.Controls.Add(this.btnIptal);
             this.Controls.Add(this.btnKaydet);
+            this.Controls.Add(this.lblGun);
+            this.Controls.Add(this.cmbGun);
             this.Controls.Add(this.lblDetaylar);
             this.Controls.Add(this.txtDetaylar);
             this.Controls.Add(this.lblAntrenmanAdi);
@@ -180,6 +205,8 @@
         private System.Windows.Forms.Label lblAntrenmanAdi;
         private System.Windows.Forms.TextBox txtDetaylar;
         private System.Windows.Forms.Label lblDetaylar;
+        private System.Windows.Forms.ComboBox cmbGun;
+        private System.Windows.Forms.Label lblGun;
         private System.Windows.Forms.Button btnKaydet;
         private System.Windows.Forms.Button btnIptal;
         private System.Windows.Forms.Button btnkapat;
