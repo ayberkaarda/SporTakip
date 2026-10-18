@@ -33,6 +33,8 @@
             this.txtSporDali = new System.Windows.Forms.TextBox();
             this.btnKaydet = new System.Windows.Forms.Button();
             this.lstSporcular = new System.Windows.Forms.ListBox();
+            this.txtAra = new System.Windows.Forms.TextBox();
+            this.btnDuzenle = new System.Windows.Forms.Button();
             this.btnAntrenmanEkle = new System.Windows.Forms.Button();
             this.btnTakipEkle = new System.Windows.Forms.Button();
             this.btnSporcuDetay = new System.Windows.Forms.Button();
@@ -89,10 +91,38 @@
             this.lstSporcular.HorizontalScrollbar = true;
             this.lstSporcular.IntegralHeight = false;
             this.lstSporcular.ItemHeight = 17;
-            this.lstSporcular.Location = new System.Drawing.Point(40, 90);
+            this.lstSporcular.Location = new System.Drawing.Point(40, 122);
             this.lstSporcular.Name = "lstSporcular";
-            this.lstSporcular.Size = new System.Drawing.Size(230, 272);
+            this.lstSporcular.Size = new System.Drawing.Size(230, 240);
             this.lstSporcular.TabIndex = 3;
+            this.lstSporcular.DoubleClick += new System.EventHandler(this.lstSporcular_DoubleClick);
+            //
+            // txtAra
+            //
+            this.txtAra.Location = new System.Drawing.Point(40, 90);
+            this.txtAra.Name = "txtAra";
+            this.txtAra.PlaceholderText = "Ada veya branşa göre ara...";
+            this.txtAra.Size = new System.Drawing.Size(230, 25);
+            this.txtAra.TabIndex = 15;
+            this.txtAra.TextChanged += new System.EventHandler(this.txtAra_TextChanged);
+            this.txtAra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtAra_KeyDown);
+            //
+            // btnDuzenle
+            //
+            this.btnDuzenle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(41)))), ((int)(((byte)(132)))));
+            this.btnDuzenle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnDuzenle.FlatAppearance.BorderSize = 0;
+            this.btnDuzenle.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(72)))), ((int)(((byte)(170)))));
+            this.btnDuzenle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDuzenle.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnDuzenle.ForeColor = System.Drawing.Color.White;
+            this.btnDuzenle.Location = new System.Drawing.Point(40, 372);
+            this.btnDuzenle.Name = "btnDuzenle";
+            this.btnDuzenle.Size = new System.Drawing.Size(110, 34);
+            this.btnDuzenle.TabIndex = 16;
+            this.btnDuzenle.Text = "Düzenle";
+            this.btnDuzenle.UseVisualStyleBackColor = false;
+            this.btnDuzenle.Click += new System.EventHandler(this.btnDuzenle_Click);
             //
             // btnAntrenmanEkle
             //
@@ -178,11 +208,11 @@
             this.btnSil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSil.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnSil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(32)))), ((int)(((byte)(38)))));
-            this.btnSil.Location = new System.Drawing.Point(40, 372);
+            this.btnSil.Location = new System.Drawing.Point(160, 372);
             this.btnSil.Name = "btnSil";
-            this.btnSil.Size = new System.Drawing.Size(230, 34);
+            this.btnSil.Size = new System.Drawing.Size(110, 34);
             this.btnSil.TabIndex = 4;
-            this.btnSil.Text = "Seçili Sporcuyu Sil";
+            this.btnSil.Text = "Sil";
             this.btnSil.UseVisualStyleBackColor = false;
             this.btnSil.Click += new System.EventHandler(this.btnSil_Click);
             //
@@ -277,6 +307,8 @@
             this.Controls.Add(this.btnTakipEkle);
             this.Controls.Add(this.btnAntrenmanEkle);
             this.Controls.Add(this.lstSporcular);
+            this.Controls.Add(this.txtAra);
+            this.Controls.Add(this.btnDuzenle);
             this.Controls.Add(this.btnKaydet);
             this.Controls.Add(this.txtSporDali);
             this.Controls.Add(this.txtAd);
@@ -299,6 +331,8 @@
         private System.Windows.Forms.TextBox txtSporDali;
         private System.Windows.Forms.Button btnKaydet;
         private System.Windows.Forms.ListBox lstSporcular;
+        private System.Windows.Forms.TextBox txtAra;
+        private System.Windows.Forms.Button btnDuzenle;
         private System.Windows.Forms.Button btnAntrenmanEkle;
         private System.Windows.Forms.Button btnTakipEkle;
         private System.Windows.Forms.Button btnSporcuDetay;
