@@ -1,34 +1,53 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
+using SporTakip.Application.Abstractions.Services;
+using SporTakip.Domain;
 
 namespace SporTakip
 {
     public partial class Form1 : BorderlessForm
     {
-        public Form1()
+        private readonly ISporcuService _sporcuService;
+        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly ErrorProvider _errors;
+
+        public Form1(ISporcuService sporcuService, IServiceScopeFactory scopeFactory)
         {
+            _sporcuService = sporcuService;
+            _scopeFactory = scopeFactory;
             InitializeComponent();
+            if (components == null) components = new System.ComponentModel.Container();
+            _errors = new ErrorProvider(components) { ContainerControl = this, BlinkStyle = ErrorBlinkStyle.NeverBlink };
         }
 
-        private void ListeleSporcular()
+        /// <summary>Listede "Id - Ad - SporDali" biçiminde gösterilen satır.</summary>
+        private sealed class SporcuSatiri
         {
-            try
-            {
-                DataTable dt = DatabaseHelper.ExecuteQuery("SELECT Id, Ad, SporDali FROM Sporcular");
-                dt.Columns.Add("Gorunum", typeof(string));
-                foreach (DataRow row in dt.Rows)
-                    row["Gorunum"] = string.Format("{0} - {1} - {2}", row["Id"], row["Ad"], row["SporDali"]);
-                lstSporcular.DisplayMember = "Gorunum";
-                lstSporcular.ValueMember = "Id";
-                lstSporcular.DataSource = dt;
-            }
-            catch (SqlException ex) { ErrorHandler.Show(ex); }
+            public SporcuSatiri(Sporcu sporcu) => Sporcu = sporcu;
+
+            public Sporcu Sporcu { get; }
+
+            public int Id => Sporcu.Id;
+
+            public string Gorunum => string.Format("{0} - {1} - {2}", Sporcu.Id, Sporcu.Ad, Sporcu.SporDali);
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
+        private async Task ListeleSporcularAsync()
         {
+            IReadOnlyList<Sporcu> sporcular = await _sporcuService.ListeleAsync(LifetimeToken);
+            if (IsClosedOrClosing) return;
+            lstSporcular.DisplayMember = nameof(SporcuSatiri.Gorunum);
+            lstSporcular.ValueMember = nameof(SporcuSatiri.Id);
+            lstSporcular.DataSource = sporcular.Select(s => new SporcuSatiri(s)).ToList();
+        }
+
+        private async void btnKaydet_Click(object sender, EventArgs e)
+        {
+            _errors.Clear();
             string ad = txtAd.Text.Trim();
             string sporDali = txtSporDali.Text.Trim();
             if (string.IsNullOrWhiteSpace(ad) || string.IsNullOrWhiteSpace(sporDali))
@@ -37,72 +56,105 @@ namespace SporTakip
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            try
+            using (BeginBusy())
             {
-                DatabaseHelper.ExecuteNonQuery("INSERT INTO Sporcular (Ad, SporDali) VALUES (@ad, @sporDali)",
-                    new SqlParameter("@ad", ad), new SqlParameter("@sporDali", sporDali));
-                MessageBox.Show("Sporcu kaydedildi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtAd.Clear();
-                txtSporDali.Clear();
-                txtAd.Focus();
-                ListeleSporcular();
+                try
+                {
+                    var result = await _sporcuService.EkleAsync(new Sporcu { Ad = ad, SporDali = sporDali }, LifetimeToken);
+                    // Form bu arada kapatıldıysa kontrollere dokunma, kapanmış form için mesaj gösterme.
+                    if (IsClosedOrClosing) return;
+                    if (!ValidationDisplay.Goster(result, _errors, new Dictionary<string, Control>
+                        {
+                            [nameof(Sporcu.Ad)] = txtAd,
+                            [nameof(Sporcu.SporDali)] = txtSporDali,
+                        }, this)) return;
+                    MessageBox.Show("Sporcu kaydedildi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtAd.Clear();
+                    txtSporDali.Clear();
+                    txtAd.Focus();
+                    await ListeleSporcularAsync();
+                }
+                catch (Exception ex) when (!IsClosingCancellation(ex)) { ErrorHandler.Show(ex); }
+                catch (OperationCanceledException) { }
             }
-            catch (SqlException ex) { ErrorHandler.Show(ex); }
+        }
+
+        private void AltFormuAc<TForm>() where TForm : Form
+        {
+            // Her pencere kendi kapsamında oluşur; kapsam kapanınca form ve scoped servisler dispose edilir.
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                var frm = scope.ServiceProvider.GetRequiredService<TForm>();
+                frm.ShowDialog(this);
+            }
         }
 
         private void btnAntrenmanEkle_Click(object sender, EventArgs e)
         {
-            using (var frm = new AntrenmanEkleForm()) { frm.ShowDialog(this); }
+            AltFormuAc<AntrenmanEkleForm>();
         }
 
         private void btnTakipEkle_Click(object sender, EventArgs e)
         {
-            using (var frm = new TakipEkleForm()) { frm.ShowDialog(this); }
+            AltFormuAc<TakipEkleForm>();
         }
 
         private void btnSporcuDetay_Click(object sender, EventArgs e)
         {
-            using (var frm = new SporcuDetayForm()) { frm.ShowDialog(this); }
+            AltFormuAc<SporcuDetayForm>();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
-            ListeleSporcular();
-
+            using (BeginBusy())
+            {
+                try { await ListeleSporcularAsync(); }
+                catch (Exception ex) when (!IsClosingCancellation(ex)) { ErrorHandler.Show(ex); }
+                catch (OperationCanceledException) { }
+            }
         }
 
         private void txtAd_Enter(object sender, EventArgs e)
         {
-            
+
         }
 
         private void txtAd_Leave(object sender, EventArgs e)
         {
-            
+
         }
 
-        private void btnSil_Click(object sender, EventArgs e)
+        private async void btnSil_Click(object sender, EventArgs e)
         {
-            var selected = lstSporcular.SelectedItem as DataRowView;
+            var selected = lstSporcular.SelectedItem as SporcuSatiri;
             if (selected == null)
             {
                 MessageBox.Show("Silmek için bir sporcu seçin.", "Seçim gerekli",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            int id = Convert.ToInt32(selected["Id"]);
-            string ad = Convert.ToString(selected["Ad"]);
+            int id = selected.Id;
+            string ad = selected.Sporcu.Ad;
             if (MessageBox.Show(string.Format("\"{0}\" ve ona ait tüm antrenman ve takip kayıtları silinecek. Devam edilsin mi?", ad),
                 "Silme onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2) != DialogResult.Yes) return;
-            try
+            using (BeginBusy())
             {
-                DatabaseHelper.DeleteSporcu(id);
-                MessageBox.Show("Sporcu ve tüm ilişkili kayıtlar silindi.", "Bilgi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ListeleSporcular();
+                try
+                {
+                    bool silindi = await _sporcuService.SilAsync(id, LifetimeToken);
+                    if (IsClosedOrClosing) return;
+                    if (silindi)
+                        MessageBox.Show(this, "Sporcu ve tüm ilişkili kayıtlar silindi.", "Bilgi",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else
+                        MessageBox.Show(this, "Kayıt bulunamadı (başka bir yerden silinmiş olabilir). Liste yenileniyor.",
+                            "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await ListeleSporcularAsync();
+                }
+                catch (Exception ex) when (!IsClosingCancellation(ex)) { ErrorHandler.Show(ex); }
+                catch (OperationCanceledException) { }
             }
-            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
         private void btnkapat_Click(object sender, EventArgs e)
@@ -116,4 +168,3 @@ namespace SporTakip
         }
     }
 }
-

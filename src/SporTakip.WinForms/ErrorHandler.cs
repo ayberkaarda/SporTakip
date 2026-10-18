@@ -1,27 +1,26 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
-using System.IO;
+using System.Data.Common;
 using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
 
 namespace SporTakip
 {
     internal static class ErrorHandler
     {
-        private static readonly object LogLock = new object();
+        private static ILogger _logger;
+
+        /// <summary>DI kurulduktan sonra çağrılır; öncesinde hatalar doğrudan günlük dosyasına yazılır.</summary>
+        internal static void Initialize(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory?.CreateLogger("SporTakip");
+        }
 
         internal static void Log(Exception exception)
         {
             try
             {
-                string directory = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "SporTakip", "logs");
-                lock (LogLock)
-                {
-                    Directory.CreateDirectory(directory);
-                    File.AppendAllText(Path.Combine(directory, DateTime.Now.ToString("yyyy-MM-dd") + ".log"),
-                        DateTime.Now.ToString("O") + Environment.NewLine + exception + Environment.NewLine);
-                }
+                if (_logger != null) _logger.LogError(exception, "İşlenmeyen hata");
+                else FileLoggerProvider.Write("[Error] SporTakip: İşlenmeyen hata", exception);
             }
             catch (Exception)
             {
@@ -32,7 +31,7 @@ namespace SporTakip
         internal static void Show(Exception exception)
         {
             Log(exception);
-            string message = exception is SqlException
+            string message = exception is DbException
                 ? "Veritabanı işlemi tamamlanamadı. Bağlantı ayarlarını ve veritabanının kullanılabilir olduğunu kontrol edin."
                 : "Beklenmeyen bir hata oluştu. Lütfen işlemi yeniden deneyin.";
             MessageBox.Show(message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);

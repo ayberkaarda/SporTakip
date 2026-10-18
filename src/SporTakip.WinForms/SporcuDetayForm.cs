@@ -1,66 +1,78 @@
 ﻿using System;
-using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
+using SporTakip.Application.Abstractions.Services;
 
 namespace SporTakip
 {
     public partial class SporcuDetayForm : BorderlessForm
     {
+        private readonly ISporcuService _sporcuService;
+        private readonly IAntrenmanService _antrenmanService;
+        private readonly ITakipService _takipService;
         private bool _isLoading;
+        private int _detayIstegi;
 
-        public SporcuDetayForm()
+        public SporcuDetayForm(ISporcuService sporcuService, IAntrenmanService antrenmanService, ITakipService takipService)
         {
+            _sporcuService = sporcuService;
+            _antrenmanService = antrenmanService;
+            _takipService = takipService;
             InitializeComponent();
         }
 
-        private void SporcuDetayForm_Load(object sender, EventArgs e)
+        private async void SporcuDetayForm_Load(object sender, EventArgs e)
         {
             cmbSporcular.SelectedIndexChanged -= cmbSporcular_SelectedIndexChanged;
             cmbSporcular.SelectedIndexChanged += cmbSporcular_SelectedIndexChanged;
             _isLoading = true;
-            try
+            using (BeginBusy())
             {
-                cmbSporcular.DisplayMember = "Ad";
-                cmbSporcular.ValueMember = "Id";
-                cmbSporcular.DataSource = DatabaseHelper.ExecuteQuery("SELECT Id, Ad FROM Sporcular");
+                try { await SporcuComboHelper.DoldurAsync(cmbSporcular, _sporcuService, LifetimeToken); }
+                catch (Exception ex) when (!IsClosingCancellation(ex)) { ErrorHandler.Show(ex); }
+                catch (OperationCanceledException) { return; }
+                finally { _isLoading = false; }
             }
-            catch (SqlException ex) { ErrorHandler.Show(ex); }
-            finally { _isLoading = false; }
-            ListeleDetaylar();
-
+            await ListeleDetaylarAsync();
         }
-        private void ListeleDetaylar()
+
+        private async Task ListeleDetaylarAsync()
         {
-            if (_isLoading) return;
+            if (_isLoading || IsClosedOrClosing) return;
+            // Token baştan alınır; ikinci sorgu sırasında kaynak dispose edilmiş olsa da güvenli.
+            CancellationToken token = LifetimeToken;
+            // Seçim hızlı değişirse yalnızca son isteğin sonucu gösterilir.
+            int istek = ++_detayIstegi;
             lstAntrenmanlar.Items.Clear();
             lstTakipler.Items.Clear();
-            if (!(cmbSporcular.SelectedValue is int)) return;
-            int sporcuId = (int)cmbSporcular.SelectedValue;
-            try
+            int? sporcuId = SporcuComboHelper.SeciliSporcuId(cmbSporcular);
+            if (sporcuId == null) return;
+            using (BeginBusy())
             {
-                var antDt = DatabaseHelper.ExecuteQuery(
-                    "SELECT AntrenmanAdi, Detaylar FROM Antrenmanlar WHERE SporcuId = @sid",
-                    new SqlParameter("@sid", sporcuId));
-                var takipDt = DatabaseHelper.ExecuteQuery(
-                    "SELECT Tarih, Aciklama FROM Takipler WHERE SporcuId = @sid ORDER BY Tarih DESC",
-                    new SqlParameter("@sid", sporcuId));
-                foreach (DataRow row in antDt.Rows)
-                    lstAntrenmanlar.Items.Add($"{row["AntrenmanAdi"]}: {row["Detaylar"]}");
-                foreach (DataRow row in takipDt.Rows)
-                    lstTakipler.Items.Add($"{row["Tarih"]}: {row["Aciklama"]}");
+                try
+                {
+                    var antrenmanlar = await _antrenmanService.SporcuyaGoreListeleAsync(sporcuId.Value, token);
+                    var takipler = await _takipService.SporcuyaGoreListeleAsync(sporcuId.Value, token);
+                    if (istek != _detayIstegi || IsClosedOrClosing) return;
+                    foreach (var antrenman in antrenmanlar)
+                        lstAntrenmanlar.Items.Add($"{antrenman.AntrenmanAdi}: {antrenman.Detaylar}");
+                    foreach (var takip in takipler)
+                        lstTakipler.Items.Add($"{takip.Tarih}: {takip.Aciklama}");
+                }
+                catch (Exception ex) when (!IsClosingCancellation(ex)) { ErrorHandler.Show(ex); }
+                catch (OperationCanceledException) { }
             }
-            catch (SqlException ex) { ErrorHandler.Show(ex); }
         }
 
-        private void cmbSporcular_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cmbSporcular_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListeleDetaylar();
+            await ListeleDetaylarAsync();
         }
 
-        private void btnGuncelle_Click(object sender, EventArgs e)
+        private async void btnGuncelle_Click(object sender, EventArgs e)
         {
-            ListeleDetaylar();
+            await ListeleDetaylarAsync();
         }
 
         private void btnkapat_Click(object sender, EventArgs e)
@@ -74,4 +86,3 @@ namespace SporTakip
         }
     }
 }
-
