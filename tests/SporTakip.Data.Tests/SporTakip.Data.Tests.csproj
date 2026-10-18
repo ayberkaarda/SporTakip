@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\src\SporTakip.Data\SporTakip.Data.csproj" />
     <Content Include="..\..\database\001_initial.sql" Link="database\001_initial.sql" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\..\database\002_cascade_fk.sql" Link="database\002_cascade_fk.sql" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\database\003_olcumler.sql" Link="database\003_olcumler.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
