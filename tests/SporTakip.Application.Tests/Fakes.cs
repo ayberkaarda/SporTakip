@@ -110,3 +110,48 @@ internal sealed class FakeTakipRepository : ITakipRepository
         return Task.FromResult(true);
     }
 }
+
+internal sealed class FakeOlcumRepository(FakeTakipRepository takipler) : IOlcumRepository
+{
+    public List<Olcum> Items { get; } = [];
+    public Olcum? Eklenen { get; private set; }
+    public Olcum? Guncellenen { get; private set; }
+    public List<int> Silinenler { get; } = [];
+
+    public Task<Olcum?> GetByIdAsync(int id, CancellationToken ct = default)
+        => Task.FromResult(Items.FirstOrDefault(o => o.Id == id));
+
+    public Task<IReadOnlyList<Olcum>> ListByTakipIdAsync(int takipId, CancellationToken ct = default)
+        => Task.FromResult<IReadOnlyList<Olcum>>(Items.Where(o => o.TakipId == takipId).OrderBy(o => o.Id).ToList());
+
+    public Task<IReadOnlyList<OlcumKaydi>> ListBySporcuIdAsync(int sporcuId, CancellationToken ct = default)
+    {
+        var liste = Items
+            .Join(takipler.Items.Where(t => t.SporcuId == sporcuId), o => o.TakipId, t => t.Id,
+                (o, t) => new OlcumKaydi(o.Id, o.TakipId, t.Tarih, o.Tur, o.Deger, o.Birim))
+            .OrderBy(k => k.Tarih).ThenBy(k => k.Id)
+            .ToList();
+        return Task.FromResult<IReadOnlyList<OlcumKaydi>>(liste);
+    }
+
+    public Task<int> AddAsync(Olcum olcum, CancellationToken ct = default)
+    {
+        Eklenen = olcum;
+        return Task.FromResult(5);
+    }
+
+    public Task<bool> UpdateAsync(Olcum olcum, CancellationToken ct = default)
+    {
+        Guncellenen = olcum;
+        var idx = Items.FindIndex(o => o.Id == olcum.Id);
+        if (idx < 0) return Task.FromResult(false);
+        Items[idx] = olcum;
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+    {
+        Silinenler.Add(id);
+        return Task.FromResult(Items.RemoveAll(o => o.Id == id) > 0);
+    }
+}
