@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>SporTakip</title>
+  <!-- Rounded tile in the light theme accent (Theme/ThemePalette.cs: Accent #047857). -->
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="#047857"/>
+  <!-- Faint baseline: the mark reads as a progress chart. -->
+  <line x1="56" y1="200" x2="200" y2="200" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="10" stroke-linecap="round"/>
+  <!-- Rising progress line. -->
+  <polyline points="56,164 104,120 140,146 192,88" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Latest measurement, in the dark theme accent (#3DD68C). -->
+  <circle cx="192" cy="88" r="24" fill="#3DD68C" stroke="#FFFFFF" stroke-width="10"/>
+</svg>

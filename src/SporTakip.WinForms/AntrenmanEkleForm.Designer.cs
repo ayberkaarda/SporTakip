@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AntrenmanEkleForm));
             this.comboSporcular = new System.Windows.Forms.ComboBox();
             this.txtAntrenmanName = new System.Windows.Forms.TextBox();
             this.txtDetaylar = new System.Windows.Forms.TextBox();
@@ -170,7 +169,6 @@
             this.Controls.Add(this.txtAntrenmanName);
             this.Controls.Add(this.comboSporcular);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "AntrenmanEkleForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
