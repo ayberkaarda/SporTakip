@@ -7,3 +7,6 @@ packages/
 TestResults/
 appsettings.Local.json
 logs/
+*.bak
+*.mdf
+*.ldf
