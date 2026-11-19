@@ -59,8 +59,8 @@ Bu uygulama, sporcuların antrenman ve gelişim süreçlerini takip etmek amacı
    dotnet run --project src\SporTakip.WinForms
    ```
 
-**Alternatif: Yedekten Yükleme**  
-Eski yöntemle, proje klasöründeki `SporTakip.bak` dosyasını kendi SQL Server sunucunuza **restore** edebilirsiniz. Eksik betikler program ilk açıldığında otomatik uygulanır; elle yapmak isterseniz `database\002_cascade_fk.sql`, `database\003_olcumler.sql` ve `database\004_butunluk.sql` betiklerini sırayla çalıştırın.
+**Mevcut Veritabanları**  
+Depo artık bir veritabanı yedeği (`.bak`) içermez; yeni veritabanı `database\` klasöründeki betiklerle oluşturulur. Elinizde eski bir SporTakip veritabanı varsa bağlantı cümlesini ona yönlendirin: eksik betikler program ilk açıldığında otomatik uygulanır; elle yapmak isterseniz `database\002_cascade_fk.sql`, `database\003_olcumler.sql` ve `database\004_butunluk.sql` betiklerini sırayla çalıştırın.
 
 ---
 

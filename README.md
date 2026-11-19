@@ -61,8 +61,8 @@ The user interface is in Turkish. In this document the on-screen labels are writ
    dotnet run --project src\SporTakip.WinForms
    ```
 
-**Alternative: restore from a backup**  
-The old way still works: **restore** the `SporTakip.bak` file in the project folder to your own SQL Server. The missing scripts are applied automatically when the program first starts; to do it by hand, run `database\002_cascade_fk.sql`, `database\003_olcumler.sql` and `database\004_butunluk.sql` in order.
+**Existing databases**  
+The repository no longer ships a database backup (`.bak`); a new database is created from the scripts in `database\`. If you already have an older SporTakip database, point the connection string at it: the missing scripts are applied automatically when the program first starts; to do it by hand, run `database\002_cascade_fk.sql`, `database\003_olcumler.sql` and `database\004_butunluk.sql` in order.
 
 ---
 
