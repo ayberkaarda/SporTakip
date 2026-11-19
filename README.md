@@ -1,28 +1,31 @@
+# 🏋️‍♂️ Spor Takip - Sports Tracking Application
 
-# 🏋️‍♂️ Spor Takip Uygulaması
+🇬🇧 **English** · 🇹🇷 [Türkçe](README.tr.md)
 
-Bu uygulama, sporcuların antrenman ve gelişim süreçlerini takip etmek amacıyla geliştirilmiş bir masaüstü yazılımıdır. C# Windows Forms ile hazırlanmış olup SQL Server veritabanı kullanmaktadır.
+A desktop application for tracking athletes' training and progress. It is built with C# Windows Forms and uses a SQL Server database.
 
-## 🚀 Kurulum
+The user interface is in Turkish. In this document the on-screen labels are written as `Turkish label` followed by the English meaning in parentheses where it helps.
 
-**Gereksinimler**
+## 🚀 Setup
 
-- Windows 10 sürüm 2004 (build 19041) veya üstü, ya da Windows 11. Arayüz projesi `net10.0-windows10.0.19041.0` hedefler; grafik bileşeni bu sürümü istiyor.
+**Requirements**
+
+- Windows 10 version 2004 (build 19041) or later, or Windows 11. The UI project targets `net10.0-windows10.0.19041.0`; the chart component needs this version.
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- SQL Server LocalDB (Visual Studio ile gelir) veya SQL Server Express
+- SQL Server LocalDB (ships with Visual Studio) or SQL Server Express
 
-1. **Veritabanı**  
-   Elle bir şey yapmanız gerekmez. Program her açılışta bağlantı ayarındaki veritabanını yoksa oluşturur ve eksik şema betiklerini sırayla uygular (`SchemaMigrator`). Uygulanan betikler veritabanındaki `SchemaVersion` tablosuna yazılır, bir sonraki açılışta tekrar çalışmaz. İşlem uzun sürerse kısa bir "Veritabanı hazırlanıyor" penceresi görünür; sunucuya ulaşılamazsa hata günlüğe yazılır ve bir uyarıdan sonra program yine açılır.
+1. **Database**  
+   You do not have to do anything by hand. On every start the program creates the database named in the connection setting if it does not exist, and applies the missing schema scripts in order (`SchemaMigrator`). Applied scripts are recorded in the `SchemaVersion` table and are not run again on the next start. If this takes a while, a short "Veritabanı hazırlanıyor" (preparing the database) window appears; if the server cannot be reached, the error is written to the log and the program still opens after a warning.
 
-   Otomatik uygulanan betikler:
+   Scripts applied automatically:
 
-   - `database\001_initial.sql`: tablolar
-   - `database\002_cascade_fk.sql`: sporcu silinince kayıtlarının da silinmesi
-   - `database\003_olcumler.sql`: takip kayıtlarına bağlı ölçümler
-   - `database\004_butunluk.sql`: veri bütünlüğü kuralları ve antrenmanlara gün alanı
+   - `database\001_initial.sql`: tables
+   - `database\002_cascade_fk.sql`: deleting an athlete also deletes their records
+   - `database\003_olcumler.sql`: measurements attached to follow-up records
+   - `database\004_butunluk.sql`: data integrity rules and a day field on workouts
 
-   **Alternatif: betikleri elle çalıştırma**  
-   İsterseniz aynı betikleri `sqlcmd` ile kendiniz de uygulayabilirsiniz. Komutları proje kök klasöründe çalıştırın:
+   **Alternative: run the scripts by hand**  
+   You can also apply the same scripts yourself with `sqlcmd`. Run the commands in the project root folder:
 
    ```bat
    sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "CREATE DATABASE SporTakip"
@@ -32,16 +35,16 @@ Bu uygulama, sporcuların antrenman ve gelişim süreçlerini takip etmek amacı
    sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\004_butunluk.sql
    ```
 
-   Örnek veri isterseniz (isteğe bağlı, otomatik çalışmaz):
+   Sample data (optional, never runs automatically):
 
    ```bat
    sqlcmd -S "(localdb)\MSSQLLocalDB" -d SporTakip -i database\seed.sql
    ```
 
-   Betikler tekrar çalıştırılabilir; var olan tablo ve kayıtlara dokunmaz.
+   The scripts can be run again; they do not touch existing tables and records.
 
-2. **Bağlantı Ayarı**  
-   Varsayılan bağlantı `src\SporTakip.WinForms\appsettings.json` içindedir ve LocalDB'yi kullanır. Kendi SQL Server'ınızı kullanacaksanız aynı klasöre `appsettings.Local.json` dosyası açın (git'e eklenmez, varsa varsayılanı ezer):
+2. **Connection setting**  
+   The default connection is in `src\SporTakip.WinForms\appsettings.json` and uses LocalDB. To use your own SQL Server, create an `appsettings.Local.json` file in the same folder (it is not added to git and overrides the default when present):
 
    ```json
    {
@@ -51,50 +54,50 @@ Bu uygulama, sporcuların antrenman ve gelişim süreçlerini takip etmek amacı
    }
    ```
 
-3. **Programı Çalıştırma**  
-   Visual Studio ile `SporTakip.sln` dosyasını açıp başlatabilir ya da komut satırından çalıştırabilirsiniz:
+3. **Running the program**  
+   Open `SporTakip.sln` in Visual Studio and start it, or run it from the command line:
 
    ```bat
    dotnet run --project src\SporTakip.WinForms
    ```
 
-**Alternatif: Yedekten Yükleme**  
-Eski yöntemle, proje klasöründeki `SporTakip.bak` dosyasını kendi SQL Server sunucunuza **restore** edebilirsiniz. Eksik betikler program ilk açıldığında otomatik uygulanır; elle yapmak isterseniz `database\002_cascade_fk.sql`, `database\003_olcumler.sql` ve `database\004_butunluk.sql` betiklerini sırayla çalıştırın.
+**Alternative: restore from a backup**  
+The old way still works: **restore** the `SporTakip.bak` file in the project folder to your own SQL Server. The missing scripts are applied automatically when the program first starts; to do it by hand, run `database\002_cascade_fk.sql`, `database\003_olcumler.sql` and `database\004_butunluk.sql` in order.
 
 ---
 
-## 🛠️ Geliştirme
+## 🛠️ Development
 
-**Çözüm yapısı**
+**Solution structure**
 
 ```
 src/
-  SporTakip.Domain/        Varlıklar (Sporcu, Antrenman, Takip, Olcum)
-  SporTakip.Application/   Servisler ve doğrulama kuralları
-  SporTakip.Data/          Dapper ile SQL Server repository'leri
-  SporTakip.WinForms/      Arayüz, DI ve appsettings.json
+  SporTakip.Domain/        Entities (Sporcu, Antrenman, Takip, Olcum)
+  SporTakip.Application/   Services and validation rules
+  SporTakip.Data/          SQL Server repositories with Dapper
+  SporTakip.WinForms/      UI, DI and appsettings.json
 tests/
-  SporTakip.Application.Tests/   Servis birim testleri
-  SporTakip.Data.Tests/          Repository entegrasyon testleri
-database/                  Şema ve örnek veri betikleri
+  SporTakip.Application.Tests/   Service unit tests
+  SporTakip.Data.Tests/          Repository integration tests
+database/                  Schema and sample data scripts
 ```
 
-**Katmanlar ve bağımlılık yönü**
+**Layers and dependency direction**
 
 ```
 WinForms ──> Application ──> Domain
    │              ▲
-   └──> Data ─────┘ (Application arayüzlerini uygular)
+   └──> Data ─────┘ (implements the Application interfaces)
 ```
 
-**Derleme ve test**
+**Build and test**
 
 ```bat
 dotnet build
 dotnet test
 ```
 
-Entegrasyon testleri (`SporTakip.Data.Tests`) yalnızca `SPORTAKIP_TEST_CONNECTION` ortam değişkeni tanımlıysa çalışır, yoksa atlanır. Testler bu sunucuda geçici bir veritabanı açar, şema betiklerini uygular ve sonunda siler:
+The integration tests (`SporTakip.Data.Tests`) only run when the `SPORTAKIP_TEST_CONNECTION` environment variable is set; otherwise they are skipped. The tests create a temporary database on that server, apply the schema scripts and drop it at the end:
 
 ```bat
 set SPORTAKIP_TEST_CONNECTION=Server=(localdb)\MSSQLLocalDB;Integrated Security=True;TrustServerCertificate=True;
@@ -103,120 +106,120 @@ dotnet test
 
 ---
 
-## 👤 Sporcu Ekleme
+## 👤 Adding an athlete
 
-1. `Sporcu Adı` kısmına adı yazın (örn: **Ayberk Arda**)  
-2. `Spor Dalı` kısmına branşı yazın (örn: **Yüzme**)  
-3. `Kaydet` butonuna basın  
-4. Sporcu listede görünür
+1. Type the name into `Sporcu Adı` (athlete name), for example **Ayberk Arda**  
+2. Type the sport into `Spor Dalı` (sport), for example **Yüzme** (swimming)  
+3. Press the `Kaydet` (save) button  
+4. The athlete appears in the list
 
-**Arama, düzenleme ve silme**
+**Search, edit and delete**
 
-- Listenin üstündeki arama kutusuna yazdıkça sporcular ada veya branşa göre süzülür. `Enter` aramayı hemen yapar, `Esc` kutuyu temizler.
-- Sporcuyu düzenlemek için listeden seçip `Düzenle` butonuna basın ya da sporcuya çift tıklayın.
-- `Sil` butonu sporcuyu, onay alındıktan sonra ona ait tüm antrenman ve takip kayıtlarıyla birlikte siler.
-
----
-
-## 🏃‍♂️ Antrenman Ekleme
-
-1. Ana ekranda `Antrenman Ekle` butonuna tıklayın  
-2. Açılan pencerede:  
-   - Sporcu listesinden birini seçin  
-   - Antrenman adını girin (örn: **Göğüs Günü**)  
-   - Detaylarını yazın (örn: **Chest Press, Incline Dumbbell Press**)  
-   - İsterseniz `Gün` listesinden haftanın bir gününü seçin (boş bırakılırsa **Atanmamış** kalır)  
-3. `Kaydet` butonuna tıklayın
-
-Var olan bir antrenmanın gününü değiştirmek için `Sporcu Detayı` ekranında antrenmanı seçip `Düzenle` butonuna basın ve `Gün` alanını değiştirin.
+- Typing into the search box above the list filters athletes by name or sport. `Enter` searches immediately, `Esc` clears the box.
+- To edit an athlete, select them in the list and press `Düzenle` (edit), or double-click the athlete.
+- `Sil` (delete) removes the athlete after a confirmation, together with all their workouts and follow-up records.
 
 ---
 
-## 📅 Takip Kaydı Ekleme
+## 🏃‍♂️ Adding a workout
 
-1. Ana ekranda `Takip Ekle` butonuna tıklayın  
-2. Açılan formda:  
-   - Sporcu seçin  
-   - Takip tarihini belirleyin  
-   - Açıklama girin (örn: **Setler tamamlandı**)  
-3. İsterseniz `Ölçümler (isteğe bağlı)` bölümünden ölçüm ekleyin:  
-   - `Tür` (örn: **Kilo**), `Değer` (örn: **95** ya da **72,5**) ve `Birim` (örn: **kg**) girin  
-   - `Ölçüm Ekle` butonuna basın (ölçüm kutularındayken `Enter` de ekler); yanlış eklenen satırı seçip `Çıkar` ile kaldırın  
-4. `Kaydet` butonuna tıklayın
+1. Click `Antrenman Ekle` (add workout) on the main screen  
+2. In the window that opens:  
+   - Pick an athlete from the list  
+   - Enter the workout name, for example **Göğüs Günü** (chest day)  
+   - Write the details, for example **Chest Press, Incline Dumbbell Press**  
+   - Optionally pick a weekday from the `Gün` (day) list (if left empty it stays **Atanmamış**, unassigned)  
+3. Click `Kaydet`
 
-Kaydedilmiş bir takibin ölçümleri `Sporcu Detayı` ekranında takip seçilip `Düzenle` ile açılan pencerede eklenebilir, güncellenebilir veya silinebilir.
+To change the day of an existing workout, select it on the `Sporcu Detayı` (athlete details) screen, press `Düzenle` and change the `Gün` field.
 
 ---
 
-## 📊 Sporcu Geçmişi Görüntüleme
+## 📅 Adding a follow-up record
 
-1. Ana ekranda `Sporcu Detayı` butonuna tıklayın  
-2. Açılan formda:  
-   - Sporcu seçin  
-   - Seçilen sporcuya ait antrenmanlar ve takip kayıtları listelenir  
-   - İsteğe bağlı olarak `Listeyi Güncelle` butonuna basarak verileri yenileyebilirsiniz
+1. Click `Takip Ekle` (add follow-up) on the main screen  
+2. In the form that opens:  
+   - Pick an athlete  
+   - Set the follow-up date  
+   - Enter a description, for example **Setler tamamlandı** (sets completed)  
+3. Optionally add measurements in the `Ölçümler (isteğe bağlı)` (measurements, optional) section:  
+   - Enter `Tür` (type, for example **Kilo**, weight), `Değer` (value, for example **95** or **72,5**) and `Birim` (unit, for example **kg**)  
+   - Press `Ölçüm Ekle` (add measurement); `Enter` also adds it while you are in the measurement boxes. Select a wrongly added row and remove it with `Çıkar` (remove)  
+4. Click `Kaydet`
 
-**Antrenman ve takip kayıtlarını düzenleme / silme**
-
-- Bir kaydı düzenlemek için tablodan seçip altındaki `Düzenle` butonuna basın ya da satıra çift tıklayın. Antrenmanda ad ve detaylar, takipte tarih ve açıklama değiştirilebilir.
-- Silmek için kaydı seçip `Sil` butonuna basın ya da `Delete` tuşunu kullanın; silmeden önce onay istenir.
-
-**Ölçüm grafiği**
-
-1. `Sporcu Detayı` ekranında sporcuyu seçip `Grafik` butonuna basın  
-2. `Ölçüm türü` listesinden bir tür seçin (örn: **Kilo**); o türün değerleri tarihe göre çizgi grafik olarak gösterilir  
-
-**CSV raporu**
-
-1. `Sporcu Detayı` ekranında sporcuyu seçip `CSV Aktar` butonuna basın  
-2. Dosyanın kaydedileceği yeri seçin  
-
-Dosya `;` ayırıcılı ve UTF-8 (BOM'lu) yazılır; Türkçe Excel'de çift tıklayınca sütunlar ve Türkçe karakterler doğru açılır. Ölçümlü takipler her ölçüm için ayrı satırda yer alır.
-
-**Haftalık program**
-
-1. `Sporcu Detayı` ekranında sporcuyu seçip `Haftalık Program` butonuna basın  
-2. Antrenmanlar Pazartesi'den Pazar'a gün kartlarında listelenir; güne atanmamış antrenmanlar altta ayrı bir şeritte gösterilir  
-
-**Klavye**
-
-Pencerelerde `Tab` kontroller arasında soldan sağa, yukarıdan aşağıya ilerler. `Enter` kaydeder; diyalog pencereleri `Esc` ile kapanır. Ana ekranda `Esc` programı kapatmaz.
+Measurements of a saved follow-up can be added, updated or deleted in the window opened by selecting the follow-up on the `Sporcu Detayı` screen and pressing `Düzenle`.
 
 ---
 
-## 🎨 Tema
+## 📊 Viewing an athlete's history
 
-Uygulamada **Açık** ve **Koyu** olmak üzere iki tema var. Ana ekranın sağ üstündeki tema düğmesinden `Sistem teması`, `Açık` veya `Koyu` seçilebilir; seçim açık pencerelerin hepsine hemen uygulanır.
+1. Click `Sporcu Detayı` on the main screen  
+2. In the form that opens:  
+   - Pick an athlete  
+   - The workouts and follow-up records of the selected athlete are listed  
+   - Optionally press `Listeyi Güncelle` (refresh list) to reload the data
 
-- Seçim `%LOCALAPPDATA%\SporTakip\tema.json` dosyasına yazılır ve sonraki açılışlarda kullanılır.
-- Bu dosya yoksa `src\SporTakip.WinForms\appsettings.json` içindeki `"Tema"` değeri (`Acik`, `Koyu` veya `Sistem`) geçerlidir.
-- `Sistem` seçiliyken Windows'un uygulama teması (açık/koyu) izlenir.
+**Editing and deleting workouts and follow-up records**
 
-Renkler, yazı tipleri ve aralıklar tek yerde, `src\SporTakip.WinForms\Theme\` klasöründe tanımlıdır.
+- To edit a record, select it in the table and press the `Düzenle` button under it, or double-click the row. For a workout the name and details can be changed, for a follow-up the date and description.
+- To delete, select the record and press `Sil` or use the `Delete` key; a confirmation is asked before deleting.
+
+**Measurement chart**
+
+1. On the `Sporcu Detayı` screen select the athlete and press `Grafik` (chart)  
+2. Pick a type from the `Ölçüm türü` (measurement type) list, for example **Kilo**; the values of that type are drawn as a line chart by date  
+
+**CSV report**
+
+1. On the `Sporcu Detayı` screen select the athlete and press `CSV Aktar` (export CSV)  
+2. Choose where to save the file  
+
+The file is written with `;` as the separator and in UTF-8 with a BOM, so columns and Turkish characters open correctly when you double-click it in Turkish Excel. Follow-ups with measurements appear on a separate row for each measurement.
+
+**Weekly program**
+
+1. On the `Sporcu Detayı` screen select the athlete and press `Haftalık Program` (weekly program)  
+2. Workouts are listed on day cards from Monday to Sunday; workouts not assigned to a day are shown in a separate strip at the bottom  
+
+**Keyboard**
+
+In the windows, `Tab` moves between controls from left to right and top to bottom. `Enter` saves; dialog windows close with `Esc`. On the main screen `Esc` does not close the program.
 
 ---
 
-## 🖼️ Ekran Görüntüleri
+## 🎨 Theme
 
-Görüntüler Açık temayla ve örnek verilerle alınmıştır.
+The application has two themes: **Light** (`Açık`) and **Dark** (`Koyu`). The theme button at the top right of the main screen offers `Sistem teması` (system theme), `Açık` or `Koyu`; the choice is applied immediately to all open windows.
 
-### Ana Sayfa
-![Ana Sayfa](screenshots/anasayfa.png)
+- The choice is written to `%LOCALAPPDATA%\SporTakip\tema.json` and used on the next starts.
+- If this file does not exist, the `"Tema"` value in `src\SporTakip.WinForms\appsettings.json` (`Acik`, `Koyu` or `Sistem`) applies.
+- While `Sistem` is selected, the Windows app theme (light or dark) is followed.
 
-### Antrenman Ekle
-![Antreman Ekle](screenshots/antreman_ekle.png)
+Colors, fonts and spacing are defined in one place, the `src\SporTakip.WinForms\Theme\` folder.
 
-### Takip Kaydı Ekle
-![Takip Ekle](screenshots/takip_ekle.png)
+---
 
-### Sporcu Detayı
-![Sporcu Detayi](screenshots/sporcu_detayi.png)
+## 🖼️ Screenshots
 
-### Haftalık Program
-![Haftalık Program](screenshots/haftalik_program.png)
+The images were taken with the light theme and sample data.
 
-### Ölçüm Grafiği
-![Ölçüm Grafiği](screenshots/olcum_grafik.png)
+### Main screen
+![Main screen](screenshots/anasayfa.png)
+
+### Add workout
+![Add workout](screenshots/antreman_ekle.png)
+
+### Add follow-up record
+![Add follow-up record](screenshots/takip_ekle.png)
+
+### Athlete details
+![Athlete details](screenshots/sporcu_detayi.png)
+
+### Weekly program
+![Weekly program](screenshots/haftalik_program.png)
+
+### Measurement chart
+![Measurement chart](screenshots/olcum_grafik.png)
 
 ## License
 
