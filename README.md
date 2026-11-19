@@ -1,4 +1,6 @@
-# 🏋️‍♂️ Spor Takip - Sports Tracking Application
+<img src="assets/logo.png" alt="SporTakip logo" width="72">
+
+# SporTakip - Sports Tracking Application
 
 🇬🇧 **English** · 🇹🇷 [Türkçe](README.tr.md)
 
@@ -79,7 +81,10 @@ src/
 tests/
   SporTakip.Application.Tests/   Service unit tests
   SporTakip.Data.Tests/          Repository integration tests
+tools/
+  SporTakip.Screenshots/   Offscreen generator for the README screenshots
 database/                  Schema and sample data scripts
+assets/                    Logo source (SVG) and a 256 px PNG
 ```
 
 **Layers and dependency direction**
@@ -108,7 +113,7 @@ dotnet test
 
 ## 👤 Adding an athlete
 
-1. Type the name into `Sporcu Adı` (athlete name), for example **Ayberk Arda**  
+1. Type the name into `Sporcu Adı` (athlete name), for example **Deniz Aksoy**  
 2. Type the sport into `Spor Dalı` (sport), for example **Yüzme** (swimming)  
 3. Press the `Kaydet` (save) button  
 4. The athlete appears in the list
@@ -201,7 +206,11 @@ Colors, fonts and spacing are defined in one place, the `src\SporTakip.WinForms\
 
 ## 🖼️ Screenshots
 
-The images were taken with the light theme and sample data.
+The images use the light theme and invented sample data. They are rendered offscreen, without opening a window, and can be regenerated from the repository root:
+
+```bat
+dotnet run --project tools\SporTakip.Screenshots
+```
 
 ### Main screen
 ![Main screen](screenshots/anasayfa.png)
