@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.txtAd = new System.Windows.Forms.TextBox();
             this.txtSporDali = new System.Windows.Forms.TextBox();
             this.btnKaydet = new System.Windows.Forms.Button();
@@ -44,9 +43,11 @@
             this.btnAsagial = new System.Windows.Forms.Button();
             this.btnTema = new System.Windows.Forms.Button();
             this.btnkapat = new System.Windows.Forms.Button();
+            this.picLogo = new System.Windows.Forms.PictureBox();
             this.lblBaslik = new System.Windows.Forms.Label();
             this.lblSporcular = new System.Windows.Forms.Label();
             this.lblYeniSporcu = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
             //
             // txtAd
@@ -197,10 +198,19 @@
             this.btnkapat.Text = "×";
             this.btnkapat.Click += new System.EventHandler(this.btnkapat_Click);
             //
+            // picLogo
+            //
+            this.picLogo.Location = new System.Drawing.Point(24, 15);
+            this.picLogo.Name = "picLogo";
+            this.picLogo.Size = new System.Drawing.Size(24, 24);
+            this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLogo.TabIndex = 17;
+            this.picLogo.TabStop = false;
+            //
             // lblBaslik
             //
             this.lblBaslik.AutoSize = true;
-            this.lblBaslik.Location = new System.Drawing.Point(22, 12);
+            this.lblBaslik.Location = new System.Drawing.Point(54, 12);
             this.lblBaslik.Name = "lblBaslik";
             this.lblBaslik.Size = new System.Drawing.Size(139, 30);
             this.lblBaslik.TabIndex = 12;
@@ -233,6 +243,7 @@
             this.Controls.Add(this.lblYeniSporcu);
             this.Controls.Add(this.lblSporcular);
             this.Controls.Add(this.lblBaslik);
+            this.Controls.Add(this.picLogo);
             this.Controls.Add(this.btnkapat);
             this.Controls.Add(this.btnTema);
             this.Controls.Add(this.btnAsagial);
@@ -249,12 +260,12 @@
             this.Controls.Add(this.txtSporDali);
             this.Controls.Add(this.txtAd);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SporTakip";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -277,6 +288,7 @@
         private System.Windows.Forms.Button btnAsagial;
         private System.Windows.Forms.Button btnTema;
         private System.Windows.Forms.Button btnkapat;
+        private System.Windows.Forms.PictureBox picLogo;
         private System.Windows.Forms.Label lblBaslik;
         private System.Windows.Forms.Label lblSporcular;
         private System.Windows.Forms.Label lblYeniSporcu;

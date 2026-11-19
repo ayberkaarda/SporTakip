@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SporcuDetayForm));
             this.cmbSporcular = new System.Windows.Forms.ComboBox();
             this.btnGuncelle = new System.Windows.Forms.Button();
             System.Windows.Forms.DataGridViewCellStyle antrenmanBaslikStili = new System.Windows.Forms.DataGridViewCellStyle();
@@ -344,7 +343,6 @@
             this.Controls.Add(this.btnGuncelle);
             this.Controls.Add(this.cmbSporcular);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "SporcuDetayForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

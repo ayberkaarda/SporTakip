@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Renders the README screenshots offscreen: every form is built with in-memory sample data,
+    its window handles are created but it is never shown, and Control.DrawToBitmap writes 1x PNGs.
+    Run from the repository root: dotnet run with project tools/SporTakip.Screenshots;
+    an optional argument sets the output folder (default: screenshots).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SporTakip.Application\SporTakip.Application.csproj" />
+    <ProjectReference Include="..\..\src\SporTakip.WinForms\SporTakip.WinForms.csproj" />
+  </ItemGroup>
+
+</Project>

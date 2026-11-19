@@ -36,6 +36,8 @@ namespace SporTakip
             DoubleBuffered = true;
             // AutoScaleDimensions (7x17) bu gövde yazı tipine göre; tüm formlar aynı tabanı kullanır.
             Font = ThemeTypography.Govde;
+            // Taskbar and Alt+Tab icon; the same app.ico for every window.
+            if (UygulamaSimgesi.Simge != null) Icon = UygulamaSimgesi.Simge;
             _lifetimeToken = _lifetime.Token;
         }
 

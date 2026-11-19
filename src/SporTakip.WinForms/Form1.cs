@@ -42,6 +42,17 @@ namespace SporTakip
             KartEkle(lblYeniSporcu, label1, txtAd, label2, txtSporDali, btnKaydet);
             KartEkle(btnAntrenmanEkle, btnTakipEkle, btnSporcuDetay);
             TemaMenusunuHazirla();
+            // Header logo: re-pick the closest icon size after DPI scaling so it stays sharp.
+            LogoyuYenile();
+            picLogo.SizeChanged += (s, e) => LogoyuYenile();
+            Disposed += (s, e) => picLogo.Image?.Dispose();
+        }
+
+        private void LogoyuYenile()
+        {
+            System.Drawing.Image eski = picLogo.Image;
+            picLogo.Image = UygulamaSimgesi.Gorsel(picLogo.Height);
+            eski?.Dispose();
         }
 
         private ContextMenuStrip _temaMenu;

@@ -1,4 +1,6 @@
-# 🏋️‍♂️ Spor Takip Uygulaması
+<img src="assets/logo.png" alt="SporTakip logo" width="72">
+
+# SporTakip - Spor Takip Uygulaması
 
 🇬🇧 [English](README.md) · 🇹🇷 **Türkçe**
 
@@ -77,7 +79,10 @@ src/
 tests/
   SporTakip.Application.Tests/   Servis birim testleri
   SporTakip.Data.Tests/          Repository entegrasyon testleri
+tools/
+  SporTakip.Screenshots/   README ekran görüntülerini pencere açmadan üreten araç
 database/                  Şema ve örnek veri betikleri
+assets/                    Logo kaynağı (SVG) ve 256 px PNG
 ```
 
 **Katmanlar ve bağımlılık yönü**
@@ -106,7 +111,7 @@ dotnet test
 
 ## 👤 Sporcu Ekleme
 
-1. `Sporcu Adı` kısmına adı yazın (örn: **Ayberk Arda**)  
+1. `Sporcu Adı` kısmına adı yazın (örn: **Deniz Aksoy**)  
 2. `Spor Dalı` kısmına branşı yazın (örn: **Yüzme**)  
 3. `Kaydet` butonuna basın  
 4. Sporcu listede görünür
@@ -199,19 +204,23 @@ Renkler, yazı tipleri ve aralıklar tek yerde, `src\SporTakip.WinForms\Theme\` 
 
 ## 🖼️ Ekran Görüntüleri
 
-Görüntüler Açık temayla ve örnek verilerle alınmıştır.
+Görüntüler Açık temayla ve uydurma örnek verilerle hazırlanmıştır. Pencere açılmadan, ekran dışında çizilirler; depo kök klasöründe şu komutla yeniden üretilebilir:
+
+```bat
+dotnet run --project tools\SporTakip.Screenshots
+```
 
 ### Ana Sayfa
 ![Ana Sayfa](screenshots/anasayfa.png)
 
 ### Antrenman Ekle
-![Antreman Ekle](screenshots/antreman_ekle.png)
+![Antrenman Ekle](screenshots/antreman_ekle.png)
 
 ### Takip Kaydı Ekle
 ![Takip Ekle](screenshots/takip_ekle.png)
 
 ### Sporcu Detayı
-![Sporcu Detayi](screenshots/sporcu_detayi.png)
+![Sporcu Detayı](screenshots/sporcu_detayi.png)
 
 ### Haftalık Program
 ![Haftalık Program](screenshots/haftalik_program.png)

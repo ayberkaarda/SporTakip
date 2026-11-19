@@ -24,7 +24,14 @@
     <ApplicationUseCompatibleTextRendering>false</ApplicationUseCompatibleTextRendering>
     <!-- Formlardaki ikonlar ve Properties\Resources içindeki görseller metin dışı kaynaklar. -->
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <!-- Original app icon drawn from assets/logo.svg (16, 24, 32, 48 and 256 px). -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Window icon for every form (see UygulamaSimgesi). -->
+    <EmbeddedResource Include="app.ico" LogicalName="SporTakip.app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
