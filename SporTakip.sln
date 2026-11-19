@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SporTakip.Application.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SporTakip.Data.Tests", "tests\SporTakip.Data.Tests\SporTakip.Data.Tests.csproj", "{03A3A1F0-F5BD-4888-9AD8-15E5A99BD1EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{07C2787E-EAC7-C090-1BA3-A61EC2A24D84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SporTakip.Screenshots", "tools\SporTakip.Screenshots\SporTakip.Screenshots.csproj", "{4479C76A-3E7C-4ABA-AE37-582A03D4020C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +105,18 @@ Global
 		{03A3A1F0-F5BD-4888-9AD8-15E5A99BD1EC}.Release|x64.Build.0 = Release|Any CPU
 		{03A3A1F0-F5BD-4888-9AD8-15E5A99BD1EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{03A3A1F0-F5BD-4888-9AD8-15E5A99BD1EC}.Release|x86.Build.0 = Release|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Debug|x64.Build.0 = Debug|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Debug|x86.Build.0 = Debug|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Release|x64.ActiveCfg = Release|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Release|x64.Build.0 = Release|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Release|x86.ActiveCfg = Release|Any CPU
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,5 +128,6 @@ Global
 		{87564DFC-38B3-418B-B744-50688D41905D} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{A181E041-DD12-4FE0-9079-1C303347A71C} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{03A3A1F0-F5BD-4888-9AD8-15E5A99BD1EC} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{4479C76A-3E7C-4ABA-AE37-582A03D4020C} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
 	EndGlobalSection
 EndGlobal
