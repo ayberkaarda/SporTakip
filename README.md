@@ -217,3 +217,7 @@ Görüntüler Açık temayla ve örnek verilerle alınmıştır.
 
 ### Ölçüm Grafiği
 ![Ölçüm Grafiği](screenshots/olcum_grafik.png)
+
+## License
+
+Released under the [MIT License](LICENSE).
